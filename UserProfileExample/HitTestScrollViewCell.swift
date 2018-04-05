@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc(ALPHitTestScrollViewCell)
 class HitTestScrollViewCell: UITableViewCell {
     
     fileprivate lazy var controller : HitTestContainerViewController = {

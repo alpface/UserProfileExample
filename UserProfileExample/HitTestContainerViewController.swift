@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc(HitTestContainerViewCollectionViewCell)
 class HitTestContainerViewCollectionViewCell: UICollectionViewCell {
     
     fileprivate var view: UIView? {
@@ -27,8 +28,7 @@ class HitTestContainerViewCollectionViewCell: UICollectionViewCell {
     }
 }
 
-@objc
-protocol HitTestContainerViewControllerDelegate: NSObjectProtocol {
+@objc protocol HitTestContainerViewControllerDelegate: NSObjectProtocol {
     /// 页面完全显示时调用
     @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) -> Void
     /// 页面即将显示时调用

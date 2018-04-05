@@ -8,63 +8,232 @@
 
 import UIKit
 
+
+internal class RoundButton: UIButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupUI()
+    }
+    
+    fileprivate func setupUI() {
+        self.backgroundColor = BaseProfileViewController.globalTint
+        self.layer.masksToBounds = true
+        self.setTitleColor(UIColor.white, for: .normal)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.frame.size.height * 0.5
+    }
+}
+
+internal class ProfileIconView: UIImageView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupUI()
+    }
+    fileprivate func setupUI() {
+        //        self.layer.cornerRadius = 8.0
+        self.layer.borderWidth = 3.0
+        self.layer.borderColor = UIColor.white.cgColor
+        self.clipsToBounds = true
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.frame.size.width * 0.5
+    }
+}
+
+
 @objc(ALPProfileHeaderView)
 class ProfileHeaderView: UIView {
-    @IBOutlet weak var iconHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var locationLabel: UILabel!
-    @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var praiseLabel: UILabel!
-    @IBOutlet weak var followingLabel: UILabel!
-    @IBOutlet weak var followersLabel: UILabel!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var nicknameLabel: UILabel!
+    var iconHeightConstraint: NSLayoutConstraint?
+    lazy var iconImageView: ProfileIconView = {
+        let imageView = ProfileIconView.init(frame: .zero)
+        imageView.backgroundColor = UIColor.lightGray
+        return imageView
+    }()
+    lazy var locationLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        label.textColor = UIColor.lightGray
+        return label
+    }()
+    lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.backgroundColor = UIColor.clear
+        return contentView
+    }()
+    lazy var praiseLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    lazy var followingLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    lazy var followersLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    lazy var usernameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    lazy var nicknameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    
+    lazy var followButton: RoundButton = {
+        let button = RoundButton(type: .system)
+        return button
+    }()
+    
+    lazy var labelContentView: UIView = {
+        let view = UIView()
+        return view
+    }()
     
     let maxHeight: CGFloat = 80
     let minHeight: CGFloat = 50
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.iconHeightConstraint.constant = maxHeight
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupUI()
+    }
+    
+    fileprivate func setupUI() {
+        self.addSubview(self.contentView)
+        self.contentView.addSubview(self.iconImageView)
+        self.contentView.addSubview(self.followButton)
+        self.addSubview(self.labelContentView)
+        self.labelContentView.addSubview(self.locationLabel)
+        self.labelContentView.addSubview(self.praiseLabel)
+        self.labelContentView.addSubview(self.followingLabel)
+        self.labelContentView.addSubview(self.followersLabel)
+        self.labelContentView.addSubview(self.usernameLabel)
+        self.labelContentView.addSubview(self.nicknameLabel)
+        
+        self.contentView.translatesAutoresizingMaskIntoConstraints = false
+        self.labelContentView.translatesAutoresizingMaskIntoConstraints = false
+        self.iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.followButton.translatesAutoresizingMaskIntoConstraints = false
+        self.locationLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.praiseLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.followingLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.followersLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.usernameLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.nicknameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.locationLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.praiseLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.usernameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.nicknameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        self.contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        self.contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        self.contentView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        self.contentView.heightAnchor.constraint(equalToConstant: 55.0).isActive = true
+        
+        self.labelContentView.topAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+        self.labelContentView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        self.labelContentView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        self.labelContentView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0.0).isActive = true
+        
+        self.iconImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 12.0).isActive = true
+        self.iconHeightConstraint = self.iconImageView.heightAnchor.constraint(equalToConstant: 50.0)
+        self.iconHeightConstraint?.isActive = true
+        self.iconImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0.0).isActive = true
+        self.iconImageView.widthAnchor.constraint(equalTo: self.iconImageView.heightAnchor, constant: 0.0).isActive = true
+        
+        self.followButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16.0).isActive = true
+        self.followButton.widthAnchor.constraint(equalToConstant: 100.0).isActive = true
+        self.followButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+        
+        self.usernameLabel.leadingAnchor.constraint(equalTo: self.labelContentView.leadingAnchor, constant: 16.0).isActive = true
+        self.usernameLabel.topAnchor.constraint(equalTo: self.labelContentView.topAnchor, constant: 8.0).isActive = true
+        self.usernameLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.labelContentView.trailingAnchor, constant: -16.0).isActive = true
+        self.nicknameLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor).isActive = true
+        self.nicknameLabel.topAnchor.constraint(lessThanOrEqualTo: self.usernameLabel.bottomAnchor, constant: 0.0).isActive = true
+        self.nicknameLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -16.0).isActive = true
+        
+        self.locationLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor).isActive = true
+        self.locationLabel.topAnchor.constraint(equalTo: self.nicknameLabel.bottomAnchor, constant: 8.0).isActive = true
+        self.locationLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -16.0).isActive = true
+        
+        self.praiseLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor).isActive = true
+        self.praiseLabel.bottomAnchor.constraint(equalTo: self.labelContentView.bottomAnchor, constant: -8.0).isActive = true
+        self.praiseLabel.topAnchor.constraint(equalTo: self.locationLabel.bottomAnchor, constant: 8.0).isActive = true
+        
+        self.followingLabel.leadingAnchor.constraint(equalTo: self.praiseLabel.trailingAnchor, constant: 8.0).isActive = true
+        self.followingLabel.centerYAnchor.constraint(equalTo: self.praiseLabel.centerYAnchor, constant: 0.0).isActive = true
+        
+        self.followersLabel.leadingAnchor.constraint(equalTo: self.followingLabel.trailingAnchor, constant: 8.0).isActive = true
+        self.followersLabel.centerYAnchor.constraint(equalTo: self.praiseLabel.centerYAnchor, constant: 0.0).isActive = true
+        self.followersLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -16.0).isActive = true
+        
+        self.iconHeightConstraint!.constant = maxHeight
         self.praiseLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         self.followingLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         self.followersLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         self.praiseLabel.setContentHuggingPriority(.required, for: .horizontal)
         self.followingLabel.setContentHuggingPriority(.required, for: .horizontal)
         self.followersLabel.setContentHuggingPriority(.required, for: .horizontal)
+        
+        self.iconImageView.image = UIImage(named: "icon")
+        self.followButton.setTitle("Follow", for: .normal)
+        self.followingLabel.text = "200关注"
+        self.followersLabel.text = "300粉丝"
+        self.praiseLabel.text = "100赞"
+        self.locationLabel.text = "北京市朝阳区"
+        self.usernameLabel.text = "alpface"
+        self.nicknameLabel.text = "xiaoyuan"
+        
     }
+
     
     func animator(t: CGFloat) {
-        //    print(t)
         
         if t < 0 {
-            iconHeightConstraint.constant = maxHeight
+            iconHeightConstraint!.constant = maxHeight
             return
         }
         
         let height = max(maxHeight - (maxHeight - minHeight) * t, minHeight)
         
-        iconHeightConstraint.constant = height
+        iconHeightConstraint!.constant = height
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        praiseLabel.sizeToFit()
-        let bottomFrame = praiseLabel.frame
-        let iSize = praiseLabel.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
-        let padding : CGFloat = 10.0
-        let resultSize = CGSize.init(width: size.width, height: bottomFrame.origin.y + iSize.height + padding)
-        return resultSize
+        
+        let newSize = self.systemLayoutSizeFitting(UILayoutFittingExpandedSize)
+        return CGSize(width: size.width, height: newSize.height)
     }
-    
-    override var frame: CGRect {
-        didSet {
-            print(frame.size.height)
-            if frame.size.height > 423 {
-                print("")
-            }
-        }
-    }
-    
     
 }
 

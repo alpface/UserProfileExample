@@ -12,7 +12,7 @@ fileprivate let HitTestScrollViewCellIdentifier = "HitTestScrollViewCellIdentifi
 fileprivate let HitTestScrollViewSectionIdentifier = "HitTestScrollViewSectionIdentifier"
 let ALPNavigationTitleLabelBottomPadding : CGFloat = 15.0;
 
-public protocol ProfileViewChildControllerProtocol {
+@objc public protocol ProfileViewChildControllerProtocol {
     /// 必须实现此方法，告知BaseProfileViewController当前控制器的view是否是scrollView
     /// 用与控制mainScrollView和child scrollView 之间滚动
     /// 如果不是UIScrollView类型，返回nil即可
@@ -63,7 +63,7 @@ open class BaseProfileViewController: UIViewController {
     
     open var username: String? {
         didSet {
-            self.profileHeaderView.usernameLabel?.text = username
+            self.profileHeaderView.usernameLabel.text = username
             
             self.navigationTitleLabel.text = username
         }
@@ -77,19 +77,19 @@ open class BaseProfileViewController: UIViewController {
     
     open var profileImage: UIImage? {
         didSet {
-            self.profileHeaderView.iconImageView?.image = profileImage
+            self.profileHeaderView.iconImageView.image = profileImage
         }
     }
     
     open var locationString: String? {
         didSet {
-            self.profileHeaderView.locationLabel?.text = locationString
+            self.profileHeaderView.locationLabel.text = locationString
         }
     }
     
     open var descriptionString: String? {
         didSet {
-            self.profileHeaderView.praiseLabel?.text = descriptionString
+            self.profileHeaderView.praiseLabel.text = descriptionString
         }
     }
     
@@ -151,7 +151,8 @@ open class BaseProfileViewController: UIViewController {
     }()
     
     fileprivate lazy var profileHeaderView: ProfileHeaderView = {
-        let _profileHeaderView = Bundle.main.loadNibNamed("ProfileHeaderView", owner: self, options: nil)?.first as! ProfileHeaderView
+//        let _profileHeaderView = Bundle.main.loadNibNamed("ProfileHeaderView", owner: self, options: nil)?.first as! ProfileHeaderView
+        let _profileHeaderView = ProfileHeaderView(frame: CGRect.init(x: 0, y: 0, width: self.mainScrollView.frame.width, height: 220))
         _profileHeaderView.usernameLabel.text = self.username
         _profileHeaderView.locationLabel.text = self.locationString
         _profileHeaderView.iconImageView.image = self.profileImage
@@ -455,16 +456,17 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
             
             // 当滚动视图到达标题标签的顶部边缘时
-            if let titleLabel = profileHeaderView.nicknameLabel, let usernameLabel = profileHeaderView.usernameLabel  {
-                
-                //  titleLabel 相对于控制器view的位置
-                let titleLabelLocationY = stickyheaderContainerViewHeight - 35
-                
-                let totalHeight = titleLabel.bounds.height + usernameLabel.bounds.height + 35
-                let detailProgress = max(0, min((contentOffset.y - titleLabelLocationY) / totalHeight, 1))
-                blurEffectView.alpha = detailProgress
-                animateNaivationTitleAt(progress: detailProgress)
-            }
+            let titleLabel = profileHeaderView.nicknameLabel
+            let usernameLabel = profileHeaderView.usernameLabel
+            
+            //  titleLabel 相对于控制器view的位置
+            let titleLabelLocationY = stickyheaderContainerViewHeight - 35
+            
+            let totalHeight = titleLabel.bounds.height + usernameLabel.bounds.height + 35
+            let detailProgress = max(0, min((contentOffset.y - titleLabelLocationY) / totalHeight, 1))
+            blurEffectView.alpha = detailProgress
+            animateNaivationTitleAt(progress: detailProgress)
+            
         }
         
     }
@@ -527,14 +529,10 @@ extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
     func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) {
         // 当滚动page 的容器视图时，mainScrollView不可以滚动
         switch panGesture.state {
-        case .ended:
-            self.mainScrollView.isScrollEnabled = true
-        case .failed:
-            self.mainScrollView.isScrollEnabled = true
-        case .cancelled:
-            self.mainScrollView.isScrollEnabled = true
-        default:
+        case .began:
             self.mainScrollView.isScrollEnabled = false
+        default:
+            self.mainScrollView.isScrollEnabled = true
         }
     }
     

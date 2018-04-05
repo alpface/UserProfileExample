@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc(ALPChildTableViewController)
 class ChildTableViewController: UITableViewController, ProfileViewChildControllerProtocol {
     func childScrollView() -> UIScrollView? {
         return self.tableView
