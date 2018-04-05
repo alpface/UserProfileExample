@@ -65,7 +65,7 @@ class ProfileHeaderView: UIView {
     lazy var locationLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14.0)
-        label.textColor = UIColor.lightGray
+        label.textColor = UIColor.brown.withAlphaComponent(0.8)
         return label
     }()
     lazy var contentView: UIView = {
@@ -94,13 +94,21 @@ class ProfileHeaderView: UIView {
     lazy var usernameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 14.0)
+        label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight(rawValue: 1.0))
         return label
     }()
     lazy var nicknameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = UIColor.lightGray
         label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    
+    lazy var summaryLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.darkGray
+        label.font = UIFont.systemFont(ofSize: 15.0)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -138,6 +146,7 @@ class ProfileHeaderView: UIView {
         self.labelContentView.addSubview(self.followersLabel)
         self.labelContentView.addSubview(self.usernameLabel)
         self.labelContentView.addSubview(self.nicknameLabel)
+        self.labelContentView.addSubview(self.summaryLabel)
         
         self.contentView.translatesAutoresizingMaskIntoConstraints = false
         self.labelContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -149,11 +158,12 @@ class ProfileHeaderView: UIView {
         self.followersLabel.translatesAutoresizingMaskIntoConstraints = false
         self.usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         self.nicknameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        self.summaryLabel.translatesAutoresizingMaskIntoConstraints = false
         self.locationLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         self.praiseLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         self.usernameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         self.nicknameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        self.summaryLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         
         self.contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         self.contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
@@ -182,8 +192,12 @@ class ProfileHeaderView: UIView {
         self.nicknameLabel.topAnchor.constraint(lessThanOrEqualTo: self.usernameLabel.bottomAnchor, constant: 0.0).isActive = true
         self.nicknameLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -16.0).isActive = true
         
+        self.summaryLabel.leadingAnchor.constraint(equalTo: self.nicknameLabel.leadingAnchor).isActive = true
+        self.summaryLabel.topAnchor.constraint(equalTo: self.nicknameLabel.bottomAnchor, constant: 8.0).isActive = true
+        self.summaryLabel.trailingAnchor.constraint(equalTo: self.labelContentView.trailingAnchor, constant: -16.0).isActive = true
+        
         self.locationLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor).isActive = true
-        self.locationLabel.topAnchor.constraint(equalTo: self.nicknameLabel.bottomAnchor, constant: 8.0).isActive = true
+        self.locationLabel.topAnchor.constraint(equalTo: self.summaryLabel.bottomAnchor, constant: 8.0).isActive = true
         self.locationLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -16.0).isActive = true
         
         self.praiseLabel.leadingAnchor.constraint(equalTo: self.usernameLabel.leadingAnchor).isActive = true
@@ -213,6 +227,7 @@ class ProfileHeaderView: UIView {
         self.locationLabel.text = "北京市朝阳区"
         self.usernameLabel.text = "alpface"
         self.nicknameLabel.text = "xiaoyuan"
+        self.summaryLabel.text = "This is xiaoyuan. Singer from Beijing. 大家好，我是孝远，欢迎交流"
         
     }
 
