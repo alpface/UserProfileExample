@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc(ALPProfileHeaderView)
 class ProfileHeaderView: UIView {
     @IBOutlet weak var iconHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconImageView: UIImageView!

@@ -11,19 +11,28 @@ import UIKit
 internal class RoundButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.layer.borderWidth = 1.0
-        self.layer.borderColor = BaseProfileViewController.globalTint.cgColor
-        self.layer.cornerRadius = 4.0
+        self.backgroundColor = BaseProfileViewController.globalTint
+        self.layer.masksToBounds = true
+        self.setTitleColor(UIColor.white, for: .normal)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.frame.size.height * 0.5
     }
 }
 
 internal class ProfileIconView: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        self.layer.cornerRadius = 8.0
+//        self.layer.cornerRadius = 8.0
         self.layer.borderWidth = 3.0
         self.layer.borderColor = UIColor.white.cgColor
         self.clipsToBounds = true
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.frame.size.width * 0.5
     }
 }
