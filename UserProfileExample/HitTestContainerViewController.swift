@@ -35,7 +35,7 @@ protocol HitTestContainerViewControllerDelegate: NSObjectProtocol {
 
 class HitTestContainerViewController: UIViewController {
     
-    public var viewControllers: [UIViewController]?
+    public var viewControllers: [ProfileViewChildControllerProtocol]?
     
     public weak var delegate: HitTestContainerViewControllerDelegate?
     
@@ -84,7 +84,7 @@ class HitTestContainerViewController: UIViewController {
         let indexPath = collectionView.indexPathsForVisibleItems.first
         guard let ip = indexPath else { return nil }
         let vc = viewControllers[ip.row]
-        return vc
+        return vc  as? UIViewController
     }
     
     public func show(page index: NSInteger, animated: Bool) {
@@ -105,7 +105,9 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HitTestContainerViewController.cellIfentifier, for: indexPath) as! HitTestContainerViewCollectionViewCell
-        cell.view = viewControllers![indexPath.row].view
+        if let viewController = viewControllers![indexPath.row] as? UIViewController {
+            cell.view = viewController.view
+        }
         return cell
     }
     
@@ -119,7 +121,7 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         guard let viewControllers = viewControllers else { return }
         // 获取当前显示已经显示的控制器
         guard let displayIndexPath = collectionView.indexPathsForVisibleItems.first else { return }
-        let displayIndexPathController = viewControllers[displayIndexPath.row]
+        let displayIndexPathController = viewControllers[displayIndexPath.row] as! UIViewController
         displayIndexPathController.endAppearanceTransition()
         
         if let delegate = delegate {
@@ -129,7 +131,7 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         }
         
         // 获取已离开屏幕的cell上控制器，执行其view消失的生命周期方法
-        let endDisplayingViewController = viewControllers[indexPath.row]
+        let endDisplayingViewController = viewControllers[indexPath.row] as! UIViewController
         if displayIndexPathController != endDisplayingViewController {
             // 如果完全显示的控制器和已经离开屏幕的控制器是同一个就return，防止初始化完成后是同一个
             endDisplayingViewController.endAppearanceTransition()
@@ -147,12 +149,12 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         }
         guard let viewControllers = viewControllers else { return }
         /// 获取即将显示的cell上的控制器，执行其view显示的生命周期方法
-        let willDisplayController = viewControllers[indexPath.row]
+        let willDisplayController = viewControllers[indexPath.row] as! UIViewController
         willDisplayController.beginAppearanceTransition(true, animated: true)
         
         /// 获取即将消失的控制器（当前collectionView显示的cell就是即将要离开屏幕的cell）
         guard let willEndDisplayingIndexPath = collectionView.indexPathsForVisibleItems.first else { return }
-        let willEndDisplayingController = viewControllers[willEndDisplayingIndexPath.row]
+        let willEndDisplayingController = viewControllers[willEndDisplayingIndexPath.row] as! UIViewController
         if willEndDisplayingController != willDisplayController {
             // 如果是同一个控制器return，防止初始化完成后是同一个
             willEndDisplayingController.beginAppearanceTransition(false, animated: true)

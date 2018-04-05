@@ -8,7 +8,11 @@
 
 import UIKit
 
-class ChildTableViewController: UITableViewController {
+class ChildTableViewController: UITableViewController, ProfileViewChildControllerProtocol {
+    func containerScrollView() -> UIScrollView? {
+        return self.tableView
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()

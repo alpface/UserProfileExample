@@ -39,30 +39,6 @@ class UserProfileViewController: BaseProfileViewController {
         return "Segment \(index)"
     }
     
-    override func prepareForLayout() {
-    
-//        self.automaticallyAdjustsScrollViewInsets = false
-//        if #available(iOS 11.0, *) {
-//            videosTableView.contentInsetAdjustmentBehavior = .never
-//            favoritesTableView.contentInsetAdjustmentBehavior = .never
-//            storysTableView.contentInsetAdjustmentBehavior = .never
-//        } else {
-//            // Fallback on earlier versions
-//        }
-//        
-//        videosTableView.delegate = self
-//        videosTableView.dataSource = self
-//        videosTableView.register(UITableViewCell.self, forCellReuseIdentifier: "tweetCell")
-//        
-//        favoritesTableView.delegate = self
-//        favoritesTableView.dataSource = self
-//        favoritesTableView.register(UITableViewCell.self, forCellReuseIdentifier: "photoCell")
-//        
-//        storysTableView.delegate = self
-//        storysTableView.dataSource = self
-//        storysTableView.register(UITableViewCell.self, forCellReuseIdentifier: "favCell")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,7 +62,7 @@ class UserProfileViewController: BaseProfileViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    override func controller(forSegment index: Int) -> UIViewController {
+    override func controller(forSegment index: Int) -> ProfileViewChildControllerProtocol {
         switch index {
         case 0:
             return ChildTableViewController()
