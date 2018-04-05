@@ -98,7 +98,10 @@ open class BaseProfileViewController: UIViewController {
     // MARK: Properties
     var currentIndex: Int = 0 {
         didSet {
-            self.updateTableViewContent()
+            if currentIndex == oldValue {
+                return
+            }
+            self.updateTableViewContent(index: currentIndex)
         }
     }
     
@@ -110,6 +113,7 @@ open class BaseProfileViewController: UIViewController {
     
     fileprivate lazy var containerViewController: HitTestContainerViewController = {
         let containerViewController = HitTestContainerViewController()
+        containerViewController.delegate = self
         return containerViewController;
     }()
     
@@ -166,16 +170,17 @@ open class BaseProfileViewController: UIViewController {
         return _blurEffectView
     }()
     
-    fileprivate lazy var segmentedControl: UISegmentedControl = {
-        let _segmentedControl = UISegmentedControl()
+    fileprivate lazy var segmentedControl: ScrollableSegmentedControl = {
+        let _segmentedControl = ScrollableSegmentedControl()
+        _segmentedControl.segmentStyle = .textOnly
         _segmentedControl.addTarget(self, action: #selector(self.segmentedControlValueDidChange(sender:)), for: .valueChanged)
-        _segmentedControl.backgroundColor = UIColor.white
         
         for index in 0..<numberOfSegments() {
             let segmentTitle = self.segmentTitle(forSegment: index)
-            _segmentedControl.insertSegment(withTitle: segmentTitle, at: index, animated: false)
+            _segmentedControl.insertSegment(withTitle: segmentTitle, image: nil, at: index)
+            
         }
-        _segmentedControl.selectedSegmentIndex = 0
+        _segmentedControl.backgroundColor = UIColor.black
         return _segmentedControl
     }()
     
@@ -232,23 +237,23 @@ open class BaseProfileViewController: UIViewController {
         
         /// 更新profileHeaderView和segmentedControlContainer的frame
         self.profileHeaderView.frame = self.computeProfileHeaderViewFrame()
-//        let contentOffset = self.mainScrollView.contentOffset
-//        let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderContainerView.bounds.width, height: stickyHeaderContainerView.frame.origin.y - contentOffset.y + stickyHeaderContainerView.bounds.height)
-//        let navigationHeight = navigationLocation.height - abs(navigationLocation.origin.y)
-//        let segmentedControlContainerLocationY = stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationHeight
-//        if contentOffset.y > 0 && contentOffset.y >= segmentedControlContainerLocationY {
-//            segmentedControlContainer.frame = CGRect(x: 0, y: contentOffset.y + navigationHeight, width: segmentedControlContainer.bounds.width, height: segmentedControlContainer.bounds.height)
-//        } else {
-//            segmentedControlContainer.frame = computeSegmentedControlContainerFrame()
-//        }
+        //        let contentOffset = self.mainScrollView.contentOffset
+        //        let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderContainerView.bounds.width, height: stickyHeaderContainerView.frame.origin.y - contentOffset.y + stickyHeaderContainerView.bounds.height)
+        //        let navigationHeight = navigationLocation.height - abs(navigationLocation.origin.y)
+        //        let segmentedControlContainerLocationY = stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationHeight
+        //        if contentOffset.y > 0 && contentOffset.y >= segmentedControlContainerLocationY {
+        //            segmentedControlContainer.frame = CGRect(x: 0, y: contentOffset.y + navigationHeight, width: segmentedControlContainer.bounds.width, height: segmentedControlContainer.bounds.height)
+        //        } else {
+        //            segmentedControlContainer.frame = computeSegmentedControlContainerFrame()
+        //        }
         
         /// 更新 子 scrollView的frame
-//        self.controllers.forEach({ (scrollView) in
-//            scrollView.frame = self.computeTableViewFrame(tableView: scrollView)
-//            scrollView.isScrollEnabled = false
-//        })
+        //        self.controllers.forEach({ (scrollView) in
+        //            scrollView.frame = self.computeTableViewFrame(tableView: scrollView)
+        //            scrollView.isScrollEnabled = false
+        //        })
         
-//        self.updateMainScrollViewFrame()
+        //        self.updateMainScrollViewFrame()
         
         self.mainScrollView.scrollIndicatorInsets = computeMainScrollViewIndicatorInsets()
         
@@ -256,7 +261,7 @@ open class BaseProfileViewController: UIViewController {
         tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: 0, height: stickyHeaderContainerView.frame.height + profileHeaderView.frame.size.height)
         self.mainScrollView.tableHeaderView = tableHeaderView
         profileHeaderView.frame = self.computeProfileHeaderViewFrame()
-
+        
     }
     
     override open func didReceiveMemoryWarning() {
@@ -313,15 +318,31 @@ extension BaseProfileViewController {
         // 分段控制视图
         segmentedControlContainer.contentView.addSubview(segmentedControl)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.widthAnchor.constraint(equalTo: segmentedControlContainer.contentView.widthAnchor, constant: -16.0).isActive = true
+        segmentedControl.widthAnchor.constraint(equalTo: segmentedControlContainer.contentView.widthAnchor, constant: 0.0).isActive = true
+        segmentedControl.heightAnchor.constraint(equalTo: segmentedControlContainer.contentView.heightAnchor, constant: 0.0).isActive = true
         segmentedControl.centerXAnchor.constraint(equalTo: segmentedControlContainer.contentView.centerXAnchor).isActive = true
         segmentedControl.centerYAnchor.constraint(equalTo: segmentedControlContainer.contentView.centerYAnchor).isActive = true
+        
+        segmentedControl.underlineSelected = true
+        segmentedControl.selectedSegmentIndex = 0
+        let largerWhiteTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
+                                       NSAttributedStringKey.foregroundColor: UIColor.white]
+        
+        let largerRedTextHighlightAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
+                                                NSAttributedStringKey.foregroundColor: UIColor.blue]
+        let largerRedTextSelectAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
+                                             NSAttributedStringKey.foregroundColor: UIColor.orange]
+        
+        segmentedControl.setTitleTextAttributes(largerWhiteTextAttributes, for: .normal)
+        
+    segmentedControl.setTitleTextAttributes(largerRedTextHighlightAttributes, for: .highlighted)
+        
+        segmentedControl.setTitleTextAttributes(largerRedTextSelectAttributes, for: .selected)
         
         self.controllers = []
         for index in 0..<numberOfSegments() {
             let controller = self.controller(forSegment: index)
             self.controllers.append(controller)
-            controller.view.isHidden = (index > 0)
         }
         
         self.mainScrollView.reloadData()
@@ -458,7 +479,7 @@ extension BaseProfileViewController: UITableViewDelegate, UITableViewDataSource 
         return 1
     }
     
-
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HitTestScrollViewCellIdentifier, for: indexPath) as! HitTestScrollViewCell
         self.containerViewController.viewControllers = self.controllers
@@ -482,7 +503,7 @@ extension BaseProfileViewController: UITableViewDelegate, UITableViewDataSource 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return segmentedControlContainerHeight
     }
-
+    
 }
 
 // MARK: Animators
@@ -513,29 +534,36 @@ extension BaseProfileViewController {
 // Table View Switching
 
 extension BaseProfileViewController {
-    func updateTableViewContent() {
+    func updateTableViewContent(index: Int) {
         print("currentIndex did changed \(self.currentIndex)")
+        self.containerViewController.show(page: index, animated: true)
     }
     
     @objc internal func segmentedControlValueDidChange(sender: AnyObject?) {
         self.currentIndex = self.segmentedControl.selectedSegmentIndex
         
-//        let scrollViewToBeShown: UIScrollView! = self.currentScrollView
+        //        let scrollViewToBeShown: UIScrollView! = self.currentScrollView
         
-//        self.controllers.forEach { (scrollView) in
-//            scrollView?.isHidden = scrollView != scrollViewToBeShown
-//        }
+        //        self.controllers.forEach { (scrollView) in
+        //            scrollView?.isHidden = scrollView != scrollViewToBeShown
+        //        }
         
-//        scrollViewToBeShown.frame = self.computeTableViewFrame(tableView: scrollViewToBeShown)
-//        self.updateMainScrollViewFrame()
+        //        scrollViewToBeShown.frame = self.computeTableViewFrame(tableView: scrollViewToBeShown)
+        //        self.updateMainScrollViewFrame()
         
         // auto scroll to top if mainScrollView.contentOffset > navigationHeight + segmentedControl.height
-//        let navigationHeight = self.scrollToScaleDownProfileIconDistance
-//        let threshold = self.computeProfileHeaderViewFrame().alp_originBottom - navigationHeight
-////
-//        if mainScrollView.contentOffset.y > threshold {
-//            self.mainScrollView.setContentOffset(CGPoint(x: 0, y: threshold), animated: false)
-//        }
+        //        let navigationHeight = self.scrollToScaleDownProfileIconDistance
+        //        let threshold = self.computeProfileHeaderViewFrame().alp_originBottom - navigationHeight
+        ////
+        //        if mainScrollView.contentOffset.y > threshold {
+        //            self.mainScrollView.setContentOffset(CGPoint(x: 0, y: threshold), animated: false)
+        //        }
+    }
+}
+
+extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
+    func hitTestContainerViewController(containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) {
+        segmentedControl.selectedSegmentIndex = index
     }
 }
 

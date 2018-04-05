@@ -27,9 +27,17 @@ class HitTestContainerViewCollectionViewCell: UICollectionViewCell {
     }
 }
 
+@objc
+protocol HitTestContainerViewControllerDelegate: NSObjectProtocol {
+    /// 页面完全显示时调用
+    @objc func hitTestContainerViewController(containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) -> Void
+}
+
 class HitTestContainerViewController: UIViewController {
     
     public var viewControllers: [UIViewController]?
+    
+    public weak var delegate: HitTestContainerViewControllerDelegate?
     
     fileprivate static let cellIfentifier: String = "HitTestContainerViewCollectionViewCell"
     
@@ -113,6 +121,12 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         guard let displayIndexPath = collectionView.indexPathsForVisibleItems.first else { return }
         let displayIndexPathController = viewControllers[displayIndexPath.row]
         displayIndexPathController.endAppearanceTransition()
+        
+        if let delegate = delegate {
+            if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(containerViewController:didPageDisplay:forItemAt:))) {
+                delegate.hitTestContainerViewController(containerViewController: self, didPageDisplay: displayIndexPathController, forItemAt: displayIndexPath.row)
+            }
+        }
         
         // 获取已离开屏幕的cell上控制器，执行其view消失的生命周期方法
         let endDisplayingViewController = viewControllers[indexPath.row]

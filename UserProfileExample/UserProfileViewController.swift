@@ -89,13 +89,13 @@ class UserProfileViewController: BaseProfileViewController {
     override func controller(forSegment index: Int) -> UIViewController {
         switch index {
         case 0:
-            return UIViewController()
+            return ChildTableViewController()
         case 1:
-            return UIViewController()
+            return ChildTableViewController()
         case 2:
-            return UIViewController()
+            return ChildTableViewController()
         default:
-            return UIViewController()
+            return ChildTableViewController()
         }
     }
 }

@@ -18,6 +18,9 @@
 		D2AF36972075D11200D5FFAF /* HitTestScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */; };
 		D2AF36992075D40700D5FFAF /* HitTestContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36982075D40700D5FFAF /* HitTestContainerViewController.swift */; };
 		D2AF369B2075D6F400D5FFAF /* HitTestScrollViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF369A2075D6F400D5FFAF /* HitTestScrollViewCell.swift */; };
+		D2AF36A32076209500D5FFAF /* ScrollableSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36A22076209500D5FFAF /* ScrollableSegmentedControl.swift */; };
+		D2AF36A5207621A400D5FFAF /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36A4207621A400D5FFAF /* RoundButton.swift */; };
+		D2AF36A72076260A00D5FFAF /* ChildTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36A62076260A00D5FFAF /* ChildTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,9 @@
 		D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitTestScrollView.swift; sourceTree = "<group>"; };
 		D2AF36982075D40700D5FFAF /* HitTestContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestContainerViewController.swift; sourceTree = "<group>"; };
 		D2AF369A2075D6F400D5FFAF /* HitTestScrollViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestScrollViewCell.swift; sourceTree = "<group>"; };
+		D2AF36A22076209500D5FFAF /* ScrollableSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableSegmentedControl.swift; sourceTree = "<group>"; };
+		D2AF36A4207621A400D5FFAF /* RoundButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
+		D2AF36A62076260A00D5FFAF /* ChildTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +72,8 @@
 		D2AF367B2075CFCA00D5FFAF /* UserProfileExample */ = {
 			isa = PBXGroup;
 			children = (
+				D2AF36A4207621A400D5FFAF /* RoundButton.swift */,
+				D2AF36A22076209500D5FFAF /* ScrollableSegmentedControl.swift */,
 				D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */,
 				D2AF36922075D0FB00D5FFAF /* ProfileHeaderView.swift */,
 				D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */,
@@ -73,6 +81,7 @@
 				D2AF368E2075D01E00D5FFAF /* BaseProfileViewController.swift */,
 				D2AF36982075D40700D5FFAF /* HitTestContainerViewController.swift */,
 				D2AF369A2075D6F400D5FFAF /* HitTestScrollViewCell.swift */,
+				D2AF36A62076260A00D5FFAF /* ChildTableViewController.swift */,
 				D2AF367C2075CFCA00D5FFAF /* AppDelegate.swift */,
 				D2AF367E2075CFCA00D5FFAF /* ViewController.swift */,
 				D2AF36832075CFCC00D5FFAF /* Assets.xcassets */,
@@ -156,11 +165,14 @@
 				D2AF367F2075CFCA00D5FFAF /* ViewController.swift in Sources */,
 				D2AF36992075D40700D5FFAF /* HitTestContainerViewController.swift in Sources */,
 				D2AF36912075D03600D5FFAF /* UserProfileViewController.swift in Sources */,
+				D2AF36A32076209500D5FFAF /* ScrollableSegmentedControl.swift in Sources */,
 				D2AF36942075D0FC00D5FFAF /* ProfileHeaderView.swift in Sources */,
 				D2AF367D2075CFCA00D5FFAF /* AppDelegate.swift in Sources */,
+				D2AF36A5207621A400D5FFAF /* RoundButton.swift in Sources */,
 				D2AF369B2075D6F400D5FFAF /* HitTestScrollViewCell.swift in Sources */,
 				D2AF368F2075D01E00D5FFAF /* BaseProfileViewController.swift in Sources */,
 				D2AF36972075D11200D5FFAF /* HitTestScrollView.swift in Sources */,
+				D2AF36A72076260A00D5FFAF /* ChildTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
