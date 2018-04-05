@@ -9,19 +9,27 @@
 /* Begin PBXBuildFile section */
 		D2AF367D2075CFCA00D5FFAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF367C2075CFCA00D5FFAF /* AppDelegate.swift */; };
 		D2AF367F2075CFCA00D5FFAF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF367E2075CFCA00D5FFAF /* ViewController.swift */; };
-		D2AF36822075CFCA00D5FFAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36802075CFCA00D5FFAF /* Main.storyboard */; };
 		D2AF36842075CFCC00D5FFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36832075CFCC00D5FFAF /* Assets.xcassets */; };
 		D2AF36872075CFCC00D5FFAF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36852075CFCC00D5FFAF /* LaunchScreen.storyboard */; };
+		D2AF368F2075D01E00D5FFAF /* BaseProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF368E2075D01E00D5FFAF /* BaseProfileViewController.swift */; };
+		D2AF36912075D03600D5FFAF /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36902075D03600D5FFAF /* UserProfileViewController.swift */; };
+		D2AF36942075D0FC00D5FFAF /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36922075D0FB00D5FFAF /* ProfileHeaderView.swift */; };
+		D2AF36952075D0FC00D5FFAF /* ProfileHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */; };
+		D2AF36972075D11200D5FFAF /* HitTestScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D2AF36792075CFCA00D5FFAF /* UserProfileExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UserProfileExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2AF367C2075CFCA00D5FFAF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2AF367E2075CFCA00D5FFAF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		D2AF36812075CFCA00D5FFAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D2AF36832075CFCC00D5FFAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2AF36862075CFCC00D5FFAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D2AF36882075CFCC00D5FFAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2AF368E2075D01E00D5FFAF /* BaseProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseProfileViewController.swift; sourceTree = "<group>"; };
+		D2AF36902075D03600D5FFAF /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		D2AF36922075D0FB00D5FFAF /* ProfileHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
+		D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileHeaderView.xib; sourceTree = "<group>"; };
+		D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitTestScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,9 +62,13 @@
 		D2AF367B2075CFCA00D5FFAF /* UserProfileExample */ = {
 			isa = PBXGroup;
 			children = (
+				D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */,
+				D2AF36922075D0FB00D5FFAF /* ProfileHeaderView.swift */,
+				D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */,
+				D2AF36902075D03600D5FFAF /* UserProfileViewController.swift */,
+				D2AF368E2075D01E00D5FFAF /* BaseProfileViewController.swift */,
 				D2AF367C2075CFCA00D5FFAF /* AppDelegate.swift */,
 				D2AF367E2075CFCA00D5FFAF /* ViewController.swift */,
-				D2AF36802075CFCA00D5FFAF /* Main.storyboard */,
 				D2AF36832075CFCC00D5FFAF /* Assets.xcassets */,
 				D2AF36852075CFCC00D5FFAF /* LaunchScreen.storyboard */,
 				D2AF36882075CFCC00D5FFAF /* Info.plist */,
@@ -124,7 +136,7 @@
 			files = (
 				D2AF36872075CFCC00D5FFAF /* LaunchScreen.storyboard in Resources */,
 				D2AF36842075CFCC00D5FFAF /* Assets.xcassets in Resources */,
-				D2AF36822075CFCA00D5FFAF /* Main.storyboard in Resources */,
+				D2AF36952075D0FC00D5FFAF /* ProfileHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,21 +148,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2AF367F2075CFCA00D5FFAF /* ViewController.swift in Sources */,
+				D2AF36912075D03600D5FFAF /* UserProfileViewController.swift in Sources */,
+				D2AF36942075D0FC00D5FFAF /* ProfileHeaderView.swift in Sources */,
 				D2AF367D2075CFCA00D5FFAF /* AppDelegate.swift in Sources */,
+				D2AF368F2075D01E00D5FFAF /* BaseProfileViewController.swift in Sources */,
+				D2AF36972075D11200D5FFAF /* HitTestScrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		D2AF36802075CFCA00D5FFAF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D2AF36812075CFCA00D5FFAF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		D2AF36852075CFCC00D5FFAF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -283,6 +291,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NKW67GFDHM;
 				INFOPLIST_FILE = UserProfileExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -301,6 +310,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NKW67GFDHM;
 				INFOPLIST_FILE = UserProfileExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
