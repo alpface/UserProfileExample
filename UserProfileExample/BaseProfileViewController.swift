@@ -108,6 +108,11 @@ open class BaseProfileViewController: UIViewController {
         return controllers[currentIndex]
     }
     
+    fileprivate lazy var containerViewController: HitTestContainerViewController = {
+        let containerViewController = HitTestContainerViewController()
+        return containerViewController;
+    }()
+    
     
     fileprivate lazy var mainScrollView: UITableView = {
         let _mainScrollView = HitTestScrollView(frame: self.view.bounds, style: .plain)
@@ -115,6 +120,7 @@ open class BaseProfileViewController: UIViewController {
         _mainScrollView.dataSource = self
         _mainScrollView.showsHorizontalScrollIndicator = false
         _mainScrollView.backgroundColor = UIColor.white
+        _mainScrollView.separatorStyle = .none
         _mainScrollView.register(HitTestScrollViewCell.classForCoder(), forCellReuseIdentifier: HitTestScrollViewCellIdentifier)
         if #available(iOS 11.0, *) {
             _mainScrollView.contentInsetAdjustmentBehavior = .never
@@ -226,15 +232,15 @@ open class BaseProfileViewController: UIViewController {
         
         /// 更新profileHeaderView和segmentedControlContainer的frame
         self.profileHeaderView.frame = self.computeProfileHeaderViewFrame()
-        let contentOffset = self.mainScrollView.contentOffset
-        let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderContainerView.bounds.width, height: stickyHeaderContainerView.frame.origin.y - contentOffset.y + stickyHeaderContainerView.bounds.height)
-        let navigationHeight = navigationLocation.height - abs(navigationLocation.origin.y)
-        let segmentedControlContainerLocationY = stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationHeight
-        if contentOffset.y > 0 && contentOffset.y >= segmentedControlContainerLocationY {
-            segmentedControlContainer.frame = CGRect(x: 0, y: contentOffset.y + navigationHeight, width: segmentedControlContainer.bounds.width, height: segmentedControlContainer.bounds.height)
-        } else {
-            segmentedControlContainer.frame = computeSegmentedControlContainerFrame()
-        }
+//        let contentOffset = self.mainScrollView.contentOffset
+//        let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderContainerView.bounds.width, height: stickyHeaderContainerView.frame.origin.y - contentOffset.y + stickyHeaderContainerView.bounds.height)
+//        let navigationHeight = navigationLocation.height - abs(navigationLocation.origin.y)
+//        let segmentedControlContainerLocationY = stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationHeight
+//        if contentOffset.y > 0 && contentOffset.y >= segmentedControlContainerLocationY {
+//            segmentedControlContainer.frame = CGRect(x: 0, y: contentOffset.y + navigationHeight, width: segmentedControlContainer.bounds.width, height: segmentedControlContainer.bounds.height)
+//        } else {
+//            segmentedControlContainer.frame = computeSegmentedControlContainerFrame()
+//        }
         
         /// 更新 子 scrollView的frame
 //        self.controllers.forEach({ (scrollView) in
@@ -271,8 +277,6 @@ extension BaseProfileViewController {
         mainScrollView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         mainScrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         
-        // sticker header Container view
-//        mainScrollView.addSubview(stickyHeaderContainerView)
         tableHeaderView.addSubview(stickyHeaderContainerView)
         tableHeaderView.addSubview(profileHeaderView)
         
@@ -368,17 +372,17 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
             let newHeight = abs(contentOffset.y) + self.stickyheaderContainerViewHeight
             
-            // adjust stickyHeader frame
+            // 跳转 stickyHeader 的 frame
             self.stickyHeaderContainerView.frame = CGRect(
                 x: 0,
                 y: contentOffset.y,
                 width: mainScrollView.bounds.width,
                 height: newHeight)
             
-            // blurring effect amplitude
+            // 更新blurEffectView的透明度
             self.blurEffectView.alpha = min(1, bounceProgress * 2)
             
-            // scaling effect
+            // 更新headerCoverView的缩放比例
             let scalingFactor = 1 + min(log(bounceProgress + 1), 2)
             //      print(scalingFactor)
             self.headerCoverView.transform = CGAffineTransform(scaleX: scalingFactor, y: scalingFactor)
@@ -390,7 +394,6 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
         } else {
             
-            // anything to be set if contentOffset.y is positive
             self.blurEffectView.alpha = 0
             self.mainScrollView.scrollIndicatorInsets = computeMainScrollViewIndicatorInsets()
         }
@@ -402,7 +405,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
         
         if contentOffset.y > 0 {
             
-            // When scroll View reached the threshold
+            // 当scrollView滚动到达阈值时scrollToScaleDownProfileIconDistance
             if contentOffset.y >= scrollToScaleDownProfileIconDistance {
                 self.stickyHeaderContainerView.frame = CGRect(x: 0, y: contentOffset.y - scrollToScaleDownProfileIconDistance, width: mainScrollView.bounds.width, height: stickyheaderContainerViewHeight)
                 // 当scrollView 的 segment顶部 滚动到scrollToScaleDownProfileIconDistance时(也就是导航底部及以上位置)，让stickyHeaderContainerView显示在最上面，防止被profileHeaderView遮挡
@@ -420,11 +423,14 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             let segmentedControlContainerLocationY = stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationHeight
             
             if contentOffset.y > 0 && contentOffset.y >= segmentedControlContainerLocationY {
-                // 让segment悬停在导航底部
-                segmentedControlContainer.frame = CGRect(x: 0, y: contentOffset.y + navigationHeight, width: segmentedControlContainer.bounds.width, height: segmentedControlContainer.bounds.height)
+                // mainScrollView滚动到顶部了, 让segment悬停在导航底部
+                // 当视图滑动的距离大于header时，这里就可以设置section1的header的位置啦，设置的时候要考虑到导航栏的透明对滚动视图的影响
+                scrollView.contentInset = UIEdgeInsetsMake(navigationHeight, 0, 0, 0)
             } else {
-                segmentedControlContainer.frame = computeSegmentedControlContainerFrame()
+                // mainScrollView离开顶部了
+                scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
             }
+            
             
             // Override
             // 当滚动视图到达标题标签的顶部边缘时
@@ -455,7 +461,8 @@ extension BaseProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HitTestScrollViewCellIdentifier, for: indexPath) as! HitTestScrollViewCell
-        
+        self.containerViewController.viewControllers = self.controllers
+        cell.view = self.containerViewController.view
         return cell
     }
     
