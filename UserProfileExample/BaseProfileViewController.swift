@@ -444,13 +444,13 @@ extension BaseProfileViewController: UIScrollViewDelegate {
                 var scrollViewInsets = scrollView.contentInset
                 scrollViewInsets.top = navigationHeight
                 scrollView.contentInset = scrollViewInsets
-                self.scrollViewDidScrollToNavigationBottom(scrollView: scrollView, locationY: segmentedControlContainerLocationY)
+                self.scrollViewDidScrollToNavigationBottom(scrollView: scrollView, segmentedControlContainerMinY: segmentedControlContainerLocationY)
             } else {
                 // mainScrollView离开顶部了
                 var scrollViewInsets = scrollView.contentInset
                 scrollViewInsets.top = 0
                 scrollView.contentInset = scrollViewInsets
-                self.scrollViewDidLeaveNavigationBottom(scrollView: scrollView, locationY: segmentedControlContainerLocationY)
+                self.scrollViewDidLeaveNavigationBottom(scrollView: scrollView, segmentedControlContainerMinY: segmentedControlContainerLocationY)
             }
             
             
@@ -499,8 +499,8 @@ extension BaseProfileViewController {
     }
     
     /// scrollView 滚动到导航底部了，子控制的scrollView可以滚动了
-    fileprivate func scrollViewDidScrollToNavigationBottom(scrollView: UIScrollView, locationY: CGFloat) {
-        scrollView.contentOffset = CGPoint(x: 0, y: locationY)
+    fileprivate func scrollViewDidScrollToNavigationBottom(scrollView: UIScrollView, segmentedControlContainerMinY: CGFloat) {
+        scrollView.contentOffset = CGPoint(x: 0, y: segmentedControlContainerMinY)
         if self.shouldScrollForMainScrollView == true {
             self.shouldScrollForMainScrollView = false
             self.containerViewController.shouldScrollForCurrentChildScrollView = true
@@ -508,9 +508,9 @@ extension BaseProfileViewController {
     }
     
     /// scrollView 滚动到导航底部了，main scrollView可以滚动了
-    fileprivate func scrollViewDidLeaveNavigationBottom(scrollView: UIScrollView, locationY: CGFloat) {
+    fileprivate func scrollViewDidLeaveNavigationBottom(scrollView: UIScrollView, segmentedControlContainerMinY: CGFloat) {
         if (self.shouldScrollForMainScrollView == false) {
-            scrollView.contentOffset = CGPoint(x: 0, y: locationY)
+            scrollView.contentOffset = CGPoint(x: 0, y: segmentedControlContainerMinY)
         }
     }
 }
