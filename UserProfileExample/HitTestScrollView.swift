@@ -9,7 +9,7 @@
 import UIKit
 
 @objc(ALPHitTestScrollView)
-internal class HitTestScrollView: UITableView {
+internal class HitTestScrollView: UITableView, UIGestureRecognizerDelegate {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -29,6 +29,10 @@ internal class HitTestScrollView: UITableView {
         }
         
         return super.touchesShouldCancel(in: view)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 

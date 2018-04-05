@@ -16,7 +16,7 @@ public protocol ProfileViewChildControllerProtocol {
     /// 必须实现此方法，告知BaseProfileViewController当前控制器的view是否是scrollView
     /// 用与控制mainScrollView和child scrollView 之间滚动
     /// 如果不是UIScrollView类型，返回nil即可
-    func containerScrollView() -> UIScrollView?
+    func childScrollView() -> UIScrollView?
 }
 
 open class BaseProfileViewController: UIViewController {
@@ -99,7 +99,7 @@ open class BaseProfileViewController: UIViewController {
     }
     
     // MARK: Properties
-    var currentIndex: Int = 0 {
+    open var currentIndex: Int = 0 {
         didSet {
             if currentIndex == oldValue {
                 return
@@ -108,9 +108,9 @@ open class BaseProfileViewController: UIViewController {
         }
     }
     
-    var controllers: [ProfileViewChildControllerProtocol] = []
+    open var controllers: [ProfileViewChildControllerProtocol] = []
     
-    var currentController: ProfileViewChildControllerProtocol {
+    open var currentController: ProfileViewChildControllerProtocol {
         return controllers[currentIndex]
     }
     
@@ -119,6 +119,9 @@ open class BaseProfileViewController: UIViewController {
         containerViewController.delegate = self
         return containerViewController;
     }()
+    
+    /// main scrollView是否可以滚动
+    public var shouldScrollForMainScrollView: Bool = true
     
     
     fileprivate lazy var mainScrollView: UITableView = {
@@ -155,6 +158,7 @@ open class BaseProfileViewController: UIViewController {
         return _profileHeaderView
     }()
     
+    /// 下拉头部放大控件
     fileprivate lazy var stickyHeaderContainerView: UIView = {
         let _stickyHeaderContainer = UIView()
         _stickyHeaderContainer.clipsToBounds = true
@@ -371,6 +375,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
     
     /// scrollView滚动时调用
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
         if scrollView.isEqual(self.mainScrollView) == false {
             return
         }
@@ -408,7 +413,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             self.blurEffectView.alpha = 0
             self.mainScrollView.scrollIndicatorInsets = computeMainScrollViewIndicatorInsets()
         }
-        
+
         // 普通情况时，适用于contentOffset.y改变时的更新
         let scaleProgress = max(0, min(1, contentOffset.y / self.scrollToScaleDownProfileIconDistance))
         self.profileHeaderView.animator(t: scaleProgress)
@@ -438,13 +443,13 @@ extension BaseProfileViewController: UIScrollViewDelegate {
                 var scrollViewInsets = scrollView.contentInset
                 scrollViewInsets.top = navigationHeight
                 scrollView.contentInset = scrollViewInsets
-                self.currentController.containerScrollView()?.isScrollEnabled = true
+                self.scrollViewDidScrollToNavigationBottom(scrollView: scrollView, locationY: segmentedControlContainerLocationY)
             } else {
-                self.currentController.containerScrollView()?.isScrollEnabled = false
                 // mainScrollView离开顶部了
                 var scrollViewInsets = scrollView.contentInset
                 scrollViewInsets.top = 0
                 scrollView.contentInset = scrollViewInsets
+                self.scrollViewDidLeaveNavigationBottom(scrollView: scrollView, locationY: segmentedControlContainerLocationY)
             }
             
             
@@ -472,21 +477,68 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             self.scrollViewDidEndScroll(scrollView)
         }
     }
+   
+}
+
+extension BaseProfileViewController {
     
     /// scrollView 滚动结束时调用
     fileprivate func scrollViewDidEndScroll(_ scrollView: UIScrollView) {
         // 在scrollView 滚动结束时将所有child scrollView 的滚动禁止掉
-        self.currentController.containerScrollView()?.isScrollEnabled = false
+        //        self.currentController.childScrollView()?.isScrollEnabled = false
+        //        self.mainScrollView.isScrollEnabled = true
     }
     
     /// 容器视图及其内容初始化完成时调用
     fileprivate func containerDidLoad() {
         controllers.forEach { (controller) in
             // 默认让controller的scrollView不能滚动
-            controller.containerScrollView()?.isScrollEnabled = false
+            //            controller.childScrollView()?.isScrollEnabled = false
         }
     }
     
+    /// scrollView 滚动到导航底部了，子控制的scrollView可以滚动了
+    fileprivate func scrollViewDidScrollToNavigationBottom(scrollView: UIScrollView, locationY: CGFloat) {
+        scrollView.contentOffset = CGPoint(x: 0, y: locationY)
+        if self.shouldScrollForMainScrollView == true {
+            self.shouldScrollForMainScrollView = false
+            self.containerViewController.shouldScrollForCurrentChildScrollView = true
+        }
+    }
+    
+    /// scrollView 滚动到导航底部了，main scrollView可以滚动了
+    fileprivate func scrollViewDidLeaveNavigationBottom(scrollView: UIScrollView, locationY: CGFloat) {
+        if (self.shouldScrollForMainScrollView == false) {
+            scrollView.contentOffset = CGPoint(x: 0, y: locationY)
+        }
+    }
+}
+extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
+    
+    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) {
+        segmentedControl.selectedSegmentIndex = index
+    }
+    
+    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, willPageDisplay controller: UIViewController, forItemAt index: Int) {
+        
+    }
+    
+    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) {
+        // 当滚动page 的容器视图时，mainScrollView不可以滚动
+        switch panGesture.state {
+        case .ended:
+            self.mainScrollView.isScrollEnabled = true
+        default:
+            self.mainScrollView.isScrollEnabled = false
+        }
+    }
+    
+    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewLeaveTop scrollView: UIScrollView) {
+        
+        // 当子scrollview 离开顶部时，其不应该可能滚动，main scrollView 可以滚动
+        self.shouldScrollForMainScrollView = true
+        
+    }
 }
 
 // MARK: UITableViewDelegates & DataSources
@@ -560,16 +612,10 @@ extension BaseProfileViewController {
     }
 }
 
-extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
-    func hitTestContainerViewController(containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) {
-        segmentedControl.selectedSegmentIndex = index
-    }
-}
-
 extension BaseProfileViewController {
     
     var debugMode: Bool {
-        return true
+        return false
     }
     
     func showDebugInfo() {

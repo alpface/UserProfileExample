@@ -9,7 +9,7 @@
 import UIKit
 
 class ChildTableViewController: UITableViewController, ProfileViewChildControllerProtocol {
-    func containerScrollView() -> UIScrollView? {
+    func childScrollView() -> UIScrollView? {
         return self.tableView
     }
     
@@ -41,8 +41,8 @@ class ChildTableViewController: UITableViewController, ProfileViewChildControlle
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 10
+        
+        return 20
     }
 
     

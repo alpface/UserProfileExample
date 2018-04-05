@@ -30,14 +30,39 @@ class HitTestContainerViewCollectionViewCell: UICollectionViewCell {
 @objc
 protocol HitTestContainerViewControllerDelegate: NSObjectProtocol {
     /// 页面完全显示时调用
-    @objc func hitTestContainerViewController(containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) -> Void
+    @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) -> Void
+    /// 页面即将显示时调用
+    @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, willPageDisplay controller: UIViewController, forItemAt index: Int) -> Void
+    
+    /// container scrollView 自带滑动手势状态发送改变时调用
+    @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) -> Void
+
+    /// child scrollView 滚动时调用
+    @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewDidScroll scrollView: UIScrollView) -> Void
+    
+    /// child scrollView 离开顶部时调用 (从上往下滚动时)
+    @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewLeaveTop scrollView: UIScrollView) -> Void
 }
 
 class HitTestContainerViewController: UIViewController {
     
-    public var viewControllers: [ProfileViewChildControllerProtocol]?
+    public var viewControllers: [ProfileViewChildControllerProtocol]? {
+        didSet {
+            let keyPath = "contentOffset"
+            oldValue?.forEach({ (controller) in
+                controller.childScrollView()?.removeObserver(self, forKeyPath: keyPath)
+            })
+            viewControllers?.forEach({ (controller) in
+                let c = controller
+                c.childScrollView()?.addObserver(self, forKeyPath: keyPath, options: .new, context: nil)
+            })
+        }
+    }
     
     public weak var delegate: HitTestContainerViewControllerDelegate?
+    
+    /// 子scrollView是否可以滚动
+    public var shouldScrollForCurrentChildScrollView: Bool?
     
     fileprivate static let cellIfentifier: String = "HitTestContainerViewCollectionViewCell"
     
@@ -52,6 +77,7 @@ class HitTestContainerViewController: UIViewController {
         view.register(HitTestContainerViewCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: HitTestContainerViewController.cellIfentifier)
         view.isPagingEnabled = true
         view.backgroundColor = UIColor.white
+        view.addObserver(self, forKeyPath: "panGestureRecognizer.state", options: .new, context: nil)
         return view
     }()
 
@@ -93,6 +119,10 @@ class HitTestContainerViewController: UIViewController {
         }
         collectionView .scrollToItem(at: IndexPath.init(row: index, section: 0), at: .centeredHorizontally, animated: animated)
     }
+    
+    deinit {
+        self.collectionView.removeObserver(self, forKeyPath: "panGestureRecognizer.state")
+    }
 
 }
 
@@ -125,8 +155,8 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         displayIndexPathController.endAppearanceTransition()
         
         if let delegate = delegate {
-            if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(containerViewController:didPageDisplay:forItemAt:))) {
-                delegate.hitTestContainerViewController(containerViewController: self, didPageDisplay: displayIndexPathController, forItemAt: displayIndexPath.row)
+            if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(_:didPageDisplay:forItemAt:))) {
+                delegate.hitTestContainerViewController!(_: self, didPageDisplay: displayIndexPathController, forItemAt: displayIndexPath.row)
             }
         }
         
@@ -151,6 +181,11 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         /// 获取即将显示的cell上的控制器，执行其view显示的生命周期方法
         let willDisplayController = viewControllers[indexPath.row] as! UIViewController
         willDisplayController.beginAppearanceTransition(true, animated: true)
+        if let delegate = delegate {
+            if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(_:willPageDisplay:forItemAt:))) {
+                delegate.hitTestContainerViewController!(_: self, willPageDisplay: willDisplayController, forItemAt: indexPath.row)
+            }
+        }
         
         /// 获取即将消失的控制器（当前collectionView显示的cell就是即将要离开屏幕的cell）
         guard let willEndDisplayingIndexPath = collectionView.indexPathsForVisibleItems.first else { return }
@@ -158,6 +193,44 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
         if willEndDisplayingController != willDisplayController {
             // 如果是同一个控制器return，防止初始化完成后是同一个
             willEndDisplayingController.beginAppearanceTransition(false, animated: true)
+        }
+    }
+    
+}
+
+extension HitTestContainerViewController {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let scrollView = object as! UIScrollView
+        if keyPath == "panGestureRecognizer.state" && scrollView == self.collectionView {
+            if let delegate = delegate {
+                if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(_:handlerContainerPanGestureState:))) {
+                    delegate.hitTestContainerViewController!(self, handlerContainerPanGestureState: self.collectionView.panGestureRecognizer)
+                }
+            }
+        }
+        else if keyPath == "contentOffset" {
+            guard let delegate = delegate else { return }
+            let childScrollView = object as! UIScrollView
+            if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(_:childScrollViewDidScroll:))) {
+                delegate.hitTestContainerViewController!(self, childScrollViewDidScroll: childScrollView)
+            }
+            
+            if self.shouldScrollForCurrentChildScrollView == false {
+                if childScrollView.contentOffset.equalTo(.zero) == false {
+                    childScrollView.contentOffset = .zero
+                }
+            }
+            
+            /// 子scrollView 离开其顶部时，子不能滚动，通知代理main scrollView 可以滚动
+            if childScrollView.contentOffset.y <= 0 {
+                if delegate.responds(to: #selector(HitTestContainerViewControllerDelegate.hitTestContainerViewController(_:childScrollViewLeaveTop:))) {
+                    delegate.hitTestContainerViewController!(self, childScrollViewLeaveTop: childScrollView)
+                }
+                shouldScrollForCurrentChildScrollView = false
+                if childScrollView.contentOffset.equalTo(.zero) == false {
+                    childScrollView.contentOffset = .zero
+                }
+            }
         }
     }
 }
