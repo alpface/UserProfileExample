@@ -13,7 +13,9 @@ class ProfileHeaderView: UIView {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var praiseLabel: UILabel!
+    @IBOutlet weak var followingLabel: UILabel!
+    @IBOutlet weak var followersLabel: UILabel!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var nicknameLabel: UILabel!
     
@@ -23,6 +25,12 @@ class ProfileHeaderView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.iconHeightConstraint.constant = maxHeight
+        self.praiseLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        self.followingLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        self.followersLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        self.praiseLabel.setContentHuggingPriority(.required, for: .horizontal)
+        self.followingLabel.setContentHuggingPriority(.required, for: .horizontal)
+        self.followersLabel.setContentHuggingPriority(.required, for: .horizontal)
     }
     
     func animator(t: CGFloat) {
@@ -39,10 +47,11 @@ class ProfileHeaderView: UIView {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        descriptionLabel.sizeToFit()
-        let bottomFrame = descriptionLabel.frame
-        let iSize = descriptionLabel.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
-        let resultSize = CGSize.init(width: size.width, height: bottomFrame.origin.y + iSize.height)
+        praiseLabel.sizeToFit()
+        let bottomFrame = praiseLabel.frame
+        let iSize = praiseLabel.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        let padding : CGFloat = 10.0
+        let resultSize = CGSize.init(width: size.width, height: bottomFrame.origin.y + iSize.height + padding)
         return resultSize
     }
     
@@ -54,5 +63,7 @@ class ProfileHeaderView: UIView {
             }
         }
     }
+    
+    
 }
 

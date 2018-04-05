@@ -63,37 +63,77 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OKX-xY-4zb">
-                    <rect key="frame" x="16" y="132" width="343" height="17.5"/>
+                    <rect key="frame" x="16" y="132" width="93.5" height="20"/>
                     <attributedString key="attributedText">
-                        <fragment content="1,994">
+                        <fragment content="19.2w">
                             <attributes>
                                 <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <font key="NSFont" size="14" name="HelveticaNeue-Bold"/>
                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                             </attributes>
                         </fragment>
-                        <fragment content=" ">
+                        <fragment content="获赞">
                             <attributes>
-                                <color key="NSColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <font key="NSFont" size="14" name=".SFNSText"/>
+                                <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="14" name="PingFangSC-Semibold"/>
                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                             </attributes>
                         </fragment>
-                        <fragment content="FOLLOWING       ">
+                        <fragment content="       ">
                             <attributes>
                                 <color key="NSColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                             </attributes>
                         </fragment>
-                        <fragment content="6,593">
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g1y-kj-URb">
+                    <rect key="frame" x="117.5" y="132" width="93.5" height="20"/>
+                    <attributedString key="attributedText">
+                        <fragment content="19.2w">
                             <attributes>
                                 <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <font key="NSFont" size="14" name="HelveticaNeue-Bold"/>
                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                             </attributes>
                         </fragment>
-                        <fragment content=" FOLLOWERS">
+                        <fragment content="关注">
+                            <attributes>
+                                <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="14" name="PingFangSC-Semibold"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="       ">
+                            <attributes>
+                                <color key="NSColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OKh-bR-oaq">
+                    <rect key="frame" x="218.5" y="131" width="93.5" height="20"/>
+                    <attributedString key="attributedText">
+                        <fragment content="19.2w">
+                            <attributes>
+                                <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="14" name="HelveticaNeue-Bold"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="粉丝">
+                            <attributes>
+                                <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="14" name="PingFangSC-Semibold"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="       ">
                             <attributes>
                                 <color key="NSColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <font key="NSFont" size="14" name=".AppleSystemUIFont"/>
@@ -109,11 +149,14 @@
                 <constraint firstItem="g72-U6-3c5" firstAttribute="top" secondItem="rCq-qH-8Tq" secondAttribute="bottom" constant="8" id="2hV-T2-5VC"/>
                 <constraint firstItem="rCq-qH-8Tq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5Gi-Iw-GwN"/>
                 <constraint firstItem="OKX-xY-4zb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="9ZO-C9-4ZH"/>
+                <constraint firstItem="g1y-kj-URb" firstAttribute="centerY" secondItem="OKX-xY-4zb" secondAttribute="centerY" id="A1D-EP-epj"/>
                 <constraint firstAttribute="trailing" secondItem="rCq-qH-8Tq" secondAttribute="trailing" id="IKD-Q8-GdZ"/>
+                <constraint firstItem="g1y-kj-URb" firstAttribute="leading" secondItem="OKX-xY-4zb" secondAttribute="trailing" constant="8" id="Ibd-71-MrW"/>
+                <constraint firstItem="OKh-bR-oaq" firstAttribute="centerY" secondItem="g1y-kj-URb" secondAttribute="centerY" constant="-1" id="Jp1-Tl-tsi"/>
                 <constraint firstItem="jYc-yg-iqa" firstAttribute="top" secondItem="g72-U6-3c5" secondAttribute="bottom" id="Pws-Ei-B0z"/>
                 <constraint firstItem="g72-U6-3c5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="UUM-OR-W06"/>
                 <constraint firstItem="rCq-qH-8Tq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="WFC-Tw-xsV"/>
-                <constraint firstAttribute="trailing" secondItem="OKX-xY-4zb" secondAttribute="trailing" constant="16" id="WZd-gj-Aw1"/>
+                <constraint firstItem="OKh-bR-oaq" firstAttribute="leading" secondItem="g1y-kj-URb" secondAttribute="trailing" constant="8" id="i96-5x-rCw"/>
                 <constraint firstItem="jYc-yg-iqa" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="iUS-ky-6sa"/>
                 <constraint firstItem="ssS-jj-WGA" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="kEk-O7-T2Y"/>
                 <constraint firstItem="ssS-jj-WGA" firstAttribute="top" secondItem="jYc-yg-iqa" secondAttribute="bottom" constant="8" id="vPe-pp-Fu4"/>
@@ -123,11 +166,13 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="contentView" destination="rCq-qH-8Tq" id="lRp-ad-udj"/>
-                <outlet property="descriptionLabel" destination="OKX-xY-4zb" id="K9Q-b6-l59"/>
+                <outlet property="followersLabel" destination="OKh-bR-oaq" id="6GJ-oS-Gq6"/>
+                <outlet property="followingLabel" destination="g1y-kj-URb" id="aiz-gH-XEP"/>
                 <outlet property="iconHeightConstraint" destination="Z4O-AZ-Jhy" id="yKw-en-mam"/>
                 <outlet property="iconImageView" destination="gkt-aO-Ke3" id="N4n-1o-fdq"/>
                 <outlet property="locationLabel" destination="ssS-jj-WGA" id="c84-bo-pX8"/>
                 <outlet property="nicknameLabel" destination="jYc-yg-iqa" id="YVs-Ga-xyF"/>
+                <outlet property="praiseLabel" destination="OKX-xY-4zb" id="Okt-Vs-yob"/>
                 <outlet property="usernameLabel" destination="g72-U6-3c5" id="QsW-Jr-bNx"/>
             </connections>
             <point key="canvasLocation" x="33.5" y="54"/>

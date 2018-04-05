@@ -89,7 +89,7 @@ open class BaseProfileViewController: UIViewController {
     
     open var descriptionString: String? {
         didSet {
-            self.profileHeaderView.descriptionLabel?.text = descriptionString
+            self.profileHeaderView.praiseLabel?.text = descriptionString
         }
     }
     
