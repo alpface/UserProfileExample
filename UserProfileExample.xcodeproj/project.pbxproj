@@ -16,6 +16,8 @@
 		D2AF36942075D0FC00D5FFAF /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36922075D0FB00D5FFAF /* ProfileHeaderView.swift */; };
 		D2AF36952075D0FC00D5FFAF /* ProfileHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */; };
 		D2AF36972075D11200D5FFAF /* HitTestScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */; };
+		D2AF36992075D40700D5FFAF /* HitTestContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF36982075D40700D5FFAF /* HitTestContainerViewController.swift */; };
+		D2AF369B2075D6F400D5FFAF /* HitTestScrollViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF369A2075D6F400D5FFAF /* HitTestScrollViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		D2AF36922075D0FB00D5FFAF /* ProfileHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileHeaderView.xib; sourceTree = "<group>"; };
 		D2AF36962075D11200D5FFAF /* HitTestScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitTestScrollView.swift; sourceTree = "<group>"; };
+		D2AF36982075D40700D5FFAF /* HitTestContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestContainerViewController.swift; sourceTree = "<group>"; };
+		D2AF369A2075D6F400D5FFAF /* HitTestScrollViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitTestScrollViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 				D2AF36932075D0FC00D5FFAF /* ProfileHeaderView.xib */,
 				D2AF36902075D03600D5FFAF /* UserProfileViewController.swift */,
 				D2AF368E2075D01E00D5FFAF /* BaseProfileViewController.swift */,
+				D2AF36982075D40700D5FFAF /* HitTestContainerViewController.swift */,
+				D2AF369A2075D6F400D5FFAF /* HitTestScrollViewCell.swift */,
 				D2AF367C2075CFCA00D5FFAF /* AppDelegate.swift */,
 				D2AF367E2075CFCA00D5FFAF /* ViewController.swift */,
 				D2AF36832075CFCC00D5FFAF /* Assets.xcassets */,
@@ -148,9 +154,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2AF367F2075CFCA00D5FFAF /* ViewController.swift in Sources */,
+				D2AF36992075D40700D5FFAF /* HitTestContainerViewController.swift in Sources */,
 				D2AF36912075D03600D5FFAF /* UserProfileViewController.swift in Sources */,
 				D2AF36942075D0FC00D5FFAF /* ProfileHeaderView.swift in Sources */,
 				D2AF367D2075CFCA00D5FFAF /* AppDelegate.swift in Sources */,
+				D2AF369B2075D6F400D5FFAF /* HitTestScrollViewCell.swift in Sources */,
 				D2AF368F2075D01E00D5FFAF /* BaseProfileViewController.swift in Sources */,
 				D2AF36972075D11200D5FFAF /* HitTestScrollView.swift in Sources */,
 			);

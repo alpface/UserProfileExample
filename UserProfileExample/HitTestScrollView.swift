@@ -9,21 +9,19 @@
 import UIKit
 
 @objc(ALPHitTestScrollView)
-internal class HitTestScrollView: UIScrollView {
+internal class HitTestScrollView: UITableView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         self.delaysContentTouches = false
     }
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    override init(frame: CGRect, style: UITableViewStyle) {
+        super.init(frame: frame, style: style)
         self.delaysContentTouches = false
     }
-//    override init(frame: CGRect, style: UITableViewStyle) {
-//        super.init(frame: frame, style: style)
-//        self.delaysContentTouches = false
-//    }
+
     
     override func touchesShouldCancel(in view: UIView) -> Bool {
         if view.isKind(of: UIButton.self) {

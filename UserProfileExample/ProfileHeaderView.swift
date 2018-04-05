@@ -47,5 +47,14 @@ class ProfileHeaderView: UIView {
         let resultSize = CGSize.init(width: size.width, height: bottomFrame.origin.y + iSize.height)
         return resultSize
     }
+    
+    override var frame: CGRect {
+        didSet {
+            print(frame.size.height)
+            if frame.size.height > 423 {
+                print("")
+            }
+        }
+    }
 }
 
