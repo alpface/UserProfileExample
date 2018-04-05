@@ -19,6 +19,7 @@ public protocol ProfileViewChildControllerProtocol {
     func childScrollView() -> UIScrollView?
 }
 
+@objc(ALPBaseProfileViewController)
 open class BaseProfileViewController: UIViewController {
     
     // MARK: Public methods
@@ -527,6 +528,10 @@ extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
         // 当滚动page 的容器视图时，mainScrollView不可以滚动
         switch panGesture.state {
         case .ended:
+            self.mainScrollView.isScrollEnabled = true
+        case .failed:
+            self.mainScrollView.isScrollEnabled = true
+        case .cancelled:
             self.mainScrollView.isScrollEnabled = true
         default:
             self.mainScrollView.isScrollEnabled = false
