@@ -21,7 +21,14 @@ class UserProfileViewController: BaseProfileViewController {
     }
     
     override func segmentTitle(forSegment index: Int) -> String {
-        return "Segment \(index)"
+        switch index {
+        case 0:
+            return "作品"
+        case 1:
+            return "喜欢"
+        default:
+            return "故事"
+        }
     }
     
     override func viewDidLoad() {
@@ -29,8 +36,7 @@ class UserProfileViewController: BaseProfileViewController {
         
         self.locationString = "Beijing"
         self.nickname = "alpface"
-        self.username = "xiaoyuan"// 
-        
+        self.username = "xiaoyuan"
         self.profileImage = UIImage.init(named: "icon.png")
     }
     

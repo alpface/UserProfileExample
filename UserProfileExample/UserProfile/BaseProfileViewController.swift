@@ -35,7 +35,7 @@ open class BaseProfileViewController: UIViewController {
     
     open func controller(forSegment index: Int) -> ProfileViewChildControllerProtocol {
         /* 需要子类重写 */
-        return ChildTableViewController()
+        return (UIViewController() as? ProfileViewChildControllerProtocol)!
     }
     
     // 全局tint color
@@ -151,7 +151,6 @@ open class BaseProfileViewController: UIViewController {
     }()
     
     fileprivate lazy var profileHeaderView: ProfileHeaderView = {
-//        let _profileHeaderView = Bundle.main.loadNibNamed("ProfileHeaderView", owner: self, options: nil)?.first as! ProfileHeaderView
         let _profileHeaderView = ProfileHeaderView(frame: CGRect.init(x: 0, y: 0, width: self.mainScrollView.frame.width, height: 220))
         _profileHeaderView.usernameLabel.text = self.username
         _profileHeaderView.locationLabel.text = self.locationString
@@ -231,6 +230,26 @@ open class BaseProfileViewController: UIViewController {
         shouldUpdateScrollViewContentFrame = true
     }
     
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.containerViewController.beginAppearanceTransition(true, animated: true)
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.containerViewController.endAppearanceTransition()
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.containerViewController.beginAppearanceTransition(false, animated: true)
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.containerViewController.endAppearanceTransition()
+    }
+    
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -245,8 +264,6 @@ open class BaseProfileViewController: UIViewController {
             /// 更新profileHeaderView和segmentedControlContainer的frame
             self.profileHeaderView.frame = self.computeProfileHeaderViewFrame()
 
-            
-            
             tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: 0, height: stickyHeaderContainerView.frame.height + profileHeaderView.frame.size.height)
             self.mainScrollView.tableHeaderView = tableHeaderView
             profileHeaderView.frame = self.computeProfileHeaderViewFrame()
@@ -488,15 +505,12 @@ extension BaseProfileViewController {
     /// scrollView 滚动结束时调用
     fileprivate func scrollViewDidEndScroll(_ scrollView: UIScrollView) {
         // 在scrollView 滚动结束时将所有child scrollView 的滚动禁止掉
-        //        self.currentController.childScrollView()?.isScrollEnabled = false
-        //        self.mainScrollView.isScrollEnabled = true
     }
     
     /// 容器视图及其内容初始化完成时调用
     fileprivate func containerDidLoad() {
         controllers.forEach { (controller) in
             // 默认让controller的scrollView不能滚动
-            //            controller.childScrollView()?.isScrollEnabled = false
         }
     }
     
@@ -618,7 +632,7 @@ extension BaseProfileViewController {
 extension BaseProfileViewController {
     
     var debugMode: Bool {
-        return true
+        return false
     }
     
     func showDebugInfo() {
