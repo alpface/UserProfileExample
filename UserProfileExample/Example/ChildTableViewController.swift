@@ -54,5 +54,6 @@ class ChildTableViewController: UITableViewController, ProfileViewChildControlle
         
         return cell
     }
+    
  
 }

@@ -132,6 +132,7 @@ open class BaseProfileViewController: UIViewController {
         _mainScrollView.showsHorizontalScrollIndicator = false
         _mainScrollView.backgroundColor = UIColor.white
         _mainScrollView.separatorStyle = .none
+        _mainScrollView.scrollsToTop = false
         _mainScrollView.register(HitTestScrollViewCell.classForCoder(), forCellReuseIdentifier: HitTestScrollViewCellIdentifier)
         if #available(iOS 11.0, *) {
             _mainScrollView.contentInsetAdjustmentBehavior = .never
@@ -497,7 +498,17 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             self.scrollViewDidEndScroll(scrollView)
         }
     }
-   
+    
+//    public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+//        self.containerViewController.viewControllers?.forEach({ (controller) in
+//            controller.childScrollView()?.scrollsToTop = false
+//        })
+//        guard let controller = self.containerViewController.displayViewController() as? ProfileViewChildControllerProtocol else {
+//            return true
+//        }
+//        controller.childScrollView()?.scrollsToTop = true
+//        return false
+//    }
 }
 
 extension BaseProfileViewController {
