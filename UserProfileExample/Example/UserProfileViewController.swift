@@ -15,21 +15,6 @@ let ALPStatusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
 @objc(ALPProfileViewController)
 class UserProfileViewController: BaseProfileViewController {
     
-    fileprivate lazy var videosTableView: UITableView = {
-        let tableView = UITableView(frame: CGRect.zero, style: .plain)
-        return tableView
-    }()
-    fileprivate lazy var favoritesTableView: UITableView = {
-        let tableView = UITableView(frame: CGRect.zero, style: .plain)
-        return tableView
-    }()
-    fileprivate lazy var storysTableView: UITableView = {
-        let tableView = UITableView(frame: CGRect.zero, style: .plain)
-        return tableView
-    }()
-    
-    var custom: UIView!
-    var label: UILabel!
 
     override func numberOfSegments() -> Int {
         return 3
@@ -44,10 +29,7 @@ class UserProfileViewController: BaseProfileViewController {
         
         self.locationString = "Beijing"
         self.nickname = "alpface"
-        self.username = "xiaoyuan"//AuthenticationManager.shared.loginUser?.username
-//        if let userid = AuthenticationManager.shared.loginUser?.userid {
-//            self.nickname = "用户号" + ":\(userid)"
-//        }
+        self.username = "xiaoyuan"// 
         
         self.profileImage = UIImage.init(named: "icon.png")
     }

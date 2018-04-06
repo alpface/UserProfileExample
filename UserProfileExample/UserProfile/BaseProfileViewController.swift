@@ -540,7 +540,7 @@ extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
         
         // 当子scrollview 离开顶部时，其不应该可能滚动，main scrollView 可以滚动
         self.shouldScrollForMainScrollView = true
-        
+        self.mainScrollView.isScrollEnabled = true
     }
 }
 
@@ -618,7 +618,7 @@ extension BaseProfileViewController {
 extension BaseProfileViewController {
     
     var debugMode: Bool {
-        return false
+        return true
     }
     
     func showDebugInfo() {
