@@ -43,7 +43,7 @@ class ChildTableViewController: UITableViewController, ProfileViewChildControlle
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 20
+        return Int(arc4random_uniform(50))
     }
 
     

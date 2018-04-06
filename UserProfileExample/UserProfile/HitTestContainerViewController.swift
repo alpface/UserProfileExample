@@ -194,7 +194,9 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
             // 如果完全显示的控制器和已经离开屏幕的控制器是同一个就return，防止初始化完成后是同一个
             endDisplayingViewController.endAppearanceTransition()
         }
-        
+//        UIView.animate(withDuration: 0.3) {
+//            UIApplication.shared.setNeedsStatusBarAppearanceUpdate()
+//        }
     }
     
     /// cell 即将显示在屏幕时调用
