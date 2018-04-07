@@ -38,6 +38,13 @@ class UserProfileViewController: BaseProfileViewController {
         self.nickname = "alpface"
         self.username = "xiaoyuan"
         self.profileImage = UIImage.init(named: "icon.png")
+        
+        self.view.layoutIfNeeded()
+        self.setNeedsUpdateHeaderLayout()
+        self.updateHeaderLayoutIfNeeded()
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +69,8 @@ class UserProfileViewController: BaseProfileViewController {
             return ChildTableViewController()
         }
     }
+    
+    
 }
 
 
