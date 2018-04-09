@@ -26,7 +26,7 @@ internal class HitTestScrollView: UITableView, UIGestureRecognizerDelegate {
         super.init(frame: frame, style: style)
         self.delaysContentTouches = false
     }
-
+    
     
     override func touchesShouldCancel(in view: UIView) -> Bool {
         if view.isKind(of: UIButton.self) {
@@ -39,7 +39,7 @@ internal class HitTestScrollView: UITableView, UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let delegate = self.delegate as? HitTestScrollViewGestureRecognizerDelegate {
             if delegate.responds(to: #selector(HitTestScrollViewGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:))) {
-               return delegate.gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
+                return delegate.gestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
             }
         }
         return true

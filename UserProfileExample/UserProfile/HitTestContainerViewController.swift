@@ -36,12 +36,40 @@ class HitTestContainerViewCollectionViewCell: UICollectionViewCell {
     
     /// container scrollView 自带滑动手势状态发送改变时调用
     @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) -> Void
-
+    
     /// child scrollView 滚动时调用
     @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewDidScroll scrollView: UIScrollView) -> Void
     
     /// child scrollView 离开顶部时调用 (从上往下滚动时)
     @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewLeaveTop scrollView: UIScrollView) -> Void
+}
+
+class HitTestContainerCollectionView: UICollectionView {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        let pan : UIPanGestureRecognizer = gestureRecognizer as! UIPanGestureRecognizer
+        
+        if pan.isEqual(self.panGestureRecognizer) == false {
+            return true
+        }
+        
+        let point = pan.translation(in: self)
+        if pan.state == .began || pan.state == .possible {
+            // y轴偏移量大，说明是上下移动, 上下滑动，让其不能响应手势
+            if fabs(point.y) >= fabs(point.x) {
+                return false
+            }
+            else {
+                // 左右滑动，如果此时collectionView的contentOffset.x < 0，
+                // 并且 手指在collectionView上的x轴偏移量大于0，说明向左移动，此时让其不能响应手势
+                if self.contentOffset.x <= 0 && point.x > 0 {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
 }
 
 class HitTestContainerViewController: UIViewController {
@@ -66,12 +94,12 @@ class HitTestContainerViewController: UIViewController {
     
     fileprivate static let cellIfentifier: String = "HitTestContainerViewCollectionViewCell"
     
-    public lazy var collectionView: UICollectionView = {
+    public lazy var collectionView: HitTestContainerCollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.scrollDirection = .horizontal
-        let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        let view = HitTestContainerCollectionView(frame: .zero, collectionViewLayout: flowLayout)
         view.delegate = self
         view.dataSource = self
         view.register(HitTestContainerViewCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: HitTestContainerViewController.cellIfentifier)
@@ -80,10 +108,10 @@ class HitTestContainerViewController: UIViewController {
         view.addObserver(self, forKeyPath: "panGestureRecognizer.state", options: .new, context: nil)
         return view
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         setupUI()
     }
@@ -124,7 +152,7 @@ class HitTestContainerViewController: UIViewController {
         self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -151,7 +179,7 @@ class HitTestContainerViewController: UIViewController {
     deinit {
         self.collectionView.removeObserver(self, forKeyPath: "panGestureRecognizer.state")
     }
-
+    
 }
 
 extension HitTestContainerViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -194,9 +222,9 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
             // 如果完全显示的控制器和已经离开屏幕的控制器是同一个就return，防止初始化完成后是同一个
             endDisplayingViewController.endAppearanceTransition()
         }
-//        UIView.animate(withDuration: 0.3) {
-//            UIApplication.shared.setNeedsStatusBarAppearanceUpdate()
-//        }
+        //        UIView.animate(withDuration: 0.3) {
+        //            UIApplication.shared.setNeedsStatusBarAppearanceUpdate()
+        //        }
     }
     
     /// cell 即将显示在屏幕时调用
@@ -262,3 +290,4 @@ extension HitTestContainerViewController {
         }
     }
 }
+
