@@ -34,10 +34,11 @@ class UserProfileViewController: BaseProfileViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.locationString = "Beijing"
-        self.nickname = "alpface"
-        self.username = "xiaoyuan"
-        self.profileImage = UIImage.init(named: "icon.png")
+        self.profileHeaderView.locationLabel.text = "Beijing"
+        self.profileHeaderView.nicknameLabel.text = "alpface"
+        self.navigationTitleLabel.text = "alpface"
+        self.profileHeaderView.usernameLabel.text = "xiaoyuan"
+        self.profileHeaderView.iconImageView.image = UIImage.init(named: "icon.png")
         
         self.view.layoutIfNeeded()
         self.setNeedsUpdateHeaderLayout()
