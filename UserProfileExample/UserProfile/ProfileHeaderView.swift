@@ -56,8 +56,8 @@ internal class ProfileIconView: UIImageView {
 
 @objc(ALPProfileHeaderView)
 open class ProfileHeaderView: UIView {
-    var iconHeightConstraint: NSLayoutConstraint?
-    lazy var iconImageView: ProfileIconView = {
+    fileprivate var iconHeightConstraint: NSLayoutConstraint?
+    open lazy var iconImageView: UIImageView = {
         let imageView = ProfileIconView.init(frame: .zero)
         imageView.backgroundColor = UIColor.lightGray
         return imageView

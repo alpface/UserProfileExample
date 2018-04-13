@@ -22,28 +22,8 @@ let ALPNavigationTitleLabelBottomPadding : CGFloat = 15.0;
 @objc(ALPBaseProfileViewController)
 open class BaseProfileViewController: UIViewController {
     
-    // MARK: Public methods
-    open func numberOfSegments() -> Int {
-        /* 需要子类重写 */
-        return 0
-    }
-    
-    open func segmentTitle(forSegment index: Int) -> String {
-        /* 需要子类重写 */
-        return ""
-    }
-    
-    open func controller(forSegment index: Int) -> ProfileViewChildControllerProtocol {
-        /* 需要子类重写 */
-        return (UIViewController() as? ProfileViewChildControllerProtocol)!
-    }
-    
     /// 全局tint color
     open static var globalTint: UIColor = UIColor(red: 42.0/255.0, green: 163.0/255.0, blue: 239.0/255.0, alpha: 1)
-    
-    
-    /// 头部背景视图的高度 (固定值)
-    open let stickyheaderContainerViewHeight: CGFloat = 150
     
     open let bouncingThreshold: CGFloat = 100
     
@@ -70,7 +50,6 @@ open class BaseProfileViewController: UIViewController {
         return maxHeight
     }
     
-    
     // MARK: Properties
     open var currentIndex: Int = 0 {
         didSet {
@@ -93,19 +72,18 @@ open class BaseProfileViewController: UIViewController {
         return containerViewController;
     }()
     
-    /// main scrollView是否可以滚动
+    /// main scrollView是否可以滚动 (用于控制main 与 child scrollView 之间的滚动)
     public var shouldScrollForMainScrollView: Bool = true
-    
     
     fileprivate lazy var mainScrollView: UITableView = {
         let _mainScrollView = HitTestScrollView(frame: self.view.bounds, style: .plain)
         _mainScrollView.delegate = self
         _mainScrollView.dataSource = self
+        _mainScrollView.showsHorizontalScrollIndicator = false
+        _mainScrollView.showsVerticalScrollIndicator = false
         _mainScrollView.backgroundColor = UIColor.white
         _mainScrollView.separatorStyle = .none
         _mainScrollView.scrollsToTop = false
-        _mainScrollView.showsVerticalScrollIndicator = false
-        _mainScrollView.showsHorizontalScrollIndicator = false
         _mainScrollView.register(HitTestScrollViewCell.classForCoder(), forCellReuseIdentifier: HitTestScrollViewCellIdentifier)
         if #available(iOS 11.0, *) {
             _mainScrollView.contentInsetAdjustmentBehavior = .never
@@ -115,25 +93,15 @@ open class BaseProfileViewController: UIViewController {
         return _mainScrollView
     }()
     
-    fileprivate lazy var headerCoverView: UIImageView = {
-        let coverImageView = UIImageView()
-        coverImageView.clipsToBounds = true
-        coverImageView.translatesAutoresizingMaskIntoConstraints = false
-        coverImageView.image = UIImage(named: "Firewatch.png")
-        coverImageView.contentMode = .scaleAspectFill
-        return coverImageView
-    }()
-    
     open lazy var profileHeaderView: ProfileHeaderView = {
         let _profileHeaderView = ProfileHeaderView(frame: CGRect.init(x: 0, y: 0, width: self.mainScrollView.frame.width, height: 220))
         return _profileHeaderView
     }()
     
     /// 下拉头部放大控件 (头部背景视图)
-    fileprivate lazy var stickyHeaderContainerView: UIView = {
-        let _stickyHeaderContainer = UIView()
-        _stickyHeaderContainer.clipsToBounds = true
-        return _stickyHeaderContainer
+    open lazy var stickyHeaderView: StickyHeaderContainerView = {
+        let stickyHeaderView = StickyHeaderContainerView()
+        return stickyHeaderView
     }()
     
     fileprivate lazy var tableHeaderView: UIView = {
@@ -141,12 +109,6 @@ open class BaseProfileViewController: UIViewController {
         return view
     }()
     
-    fileprivate lazy var blurEffectView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let _blurEffectView = UIVisualEffectView(effect: blurEffect)
-        _blurEffectView.alpha = 0
-        return _blurEffectView
-    }()
     
     fileprivate lazy var segmentedControl: ScrollableSegmentedControl = {
         let _segmentedControl = ScrollableSegmentedControl()
@@ -189,16 +151,15 @@ open class BaseProfileViewController: UIViewController {
             self.profileHeaderViewHeight = profileHeaderView.sizeThatFits(self.mainScrollView.bounds.size).height
             
             /// 只要第一次view布局完成时，再调整下stickyHeaderContainerView的frame，剩余的情况会在scrollViewDidScrollView:时调整
-            self.stickyHeaderContainerView.frame = self.computeStickyHeaderContainerViewFrame()
+            self.stickyHeaderView.frame = self.computeStickyHeaderContainerViewFrame()
             
             
             /// 更新profileHeaderView和segmentedControlContainer的frame
             self.profileHeaderView.frame = self.computeProfileHeaderViewFrame()
             
-            tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: 0, height: stickyHeaderContainerView.frame.height + profileHeaderView.frame.size.height)
+            tableHeaderView.frame = CGRect.init(x: 0, y: 0, width: 0, height: stickyHeaderView.frame.height + profileHeaderView.frame.size.height)
             self.mainScrollView.tableHeaderView = tableHeaderView
             profileHeaderView.frame = self.computeProfileHeaderViewFrame()
-            self.mainScrollView.scrollIndicatorInsets = computeMainScrollViewIndicatorInsets()
             self.needsUpdateHeaderLayout = false
         }
     }
@@ -265,6 +226,22 @@ open class BaseProfileViewController: UIViewController {
         super.didReceiveMemoryWarning()
         
     }
+    
+    // MARK: - Override methods
+    open func numberOfSegments() -> Int {
+        /* 需要子类重写 */
+        return 0
+    }
+    
+    open func segmentTitle(forSegment index: Int) -> String {
+        /* 需要子类重写 */
+        return ""
+    }
+    
+    open func controller(forSegment index: Int) -> ProfileViewChildControllerProtocol {
+        /* 需要子类重写 */
+        return (UIViewController() as? ProfileViewChildControllerProtocol)!
+    }
 }
 
 extension BaseProfileViewController {
@@ -279,33 +256,17 @@ extension BaseProfileViewController {
         mainScrollView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         mainScrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         
-        tableHeaderView.addSubview(stickyHeaderContainerView)
+        tableHeaderView.addSubview(stickyHeaderView)
         tableHeaderView.addSubview(profileHeaderView)
         
         mainScrollView.tableHeaderView = tableHeaderView
         
-        // Cover Image View
-        stickyHeaderContainerView.addSubview(headerCoverView)
-        headerCoverView.translatesAutoresizingMaskIntoConstraints = false
-        headerCoverView.leadingAnchor.constraint(equalTo: stickyHeaderContainerView.leadingAnchor).isActive = true
-        headerCoverView.trailingAnchor.constraint(equalTo: stickyHeaderContainerView.trailingAnchor).isActive = true
-        headerCoverView.topAnchor.constraint(equalTo: stickyHeaderContainerView.topAnchor).isActive = true
-        headerCoverView.bottomAnchor.constraint(equalTo: stickyHeaderContainerView.bottomAnchor).isActive = true
-        
-        
-        // blur effect on top of coverImageView
-        stickyHeaderContainerView.addSubview(blurEffectView)
-        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        blurEffectView.leadingAnchor.constraint(equalTo: stickyHeaderContainerView.leadingAnchor).isActive = true
-        blurEffectView.trailingAnchor.constraint(equalTo: stickyHeaderContainerView.trailingAnchor).isActive = true
-        blurEffectView.topAnchor.constraint(equalTo: stickyHeaderContainerView.topAnchor).isActive = true
-        blurEffectView.bottomAnchor.constraint(equalTo: stickyHeaderContainerView.bottomAnchor).isActive = true
         
         // 导航标题
-        stickyHeaderContainerView.addSubview(navigationTitleLabel)
+        stickyHeaderView.addSubview(navigationTitleLabel)
         navigationTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        navigationTitleLabel.centerXAnchor.constraint(equalTo: stickyHeaderContainerView.centerXAnchor).isActive = true
-        navigationTitleLabelBottomConstraint = navigationTitleLabel.bottomAnchor.constraint(equalTo: stickyHeaderContainerView.bottomAnchor, constant: -ALPNavigationTitleLabelBottomPadding)
+        navigationTitleLabel.centerXAnchor.constraint(equalTo: stickyHeaderView.centerXAnchor).isActive = true
+        navigationTitleLabelBottomConstraint = navigationTitleLabel.bottomAnchor.constraint(equalTo: stickyHeaderView.bottomAnchor, constant: -ALPNavigationTitleLabelBottomPadding)
         navigationTitleLabelBottomConstraint?.isActive = true
         
         
@@ -323,7 +284,7 @@ extension BaseProfileViewController {
         segmentedControl.underlineSelected = true
         segmentedControl.selectedSegmentIndex = 0
         let largerWhiteTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
-                                         NSAttributedStringKey.foregroundColor: UIColor.white]
+                                       NSAttributedStringKey.foregroundColor: UIColor.white]
         
         let largerRedTextHighlightAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
                                                 NSAttributedStringKey.foregroundColor: UIColor.blue]
@@ -332,14 +293,14 @@ extension BaseProfileViewController {
         
         segmentedControl.setTitleTextAttributes(largerWhiteTextAttributes, for: .normal)
         
-        segmentedControl.setTitleTextAttributes(largerRedTextHighlightAttributes, for: .highlighted)
+    segmentedControl.setTitleTextAttributes(largerRedTextHighlightAttributes, for: .highlighted)
         
         segmentedControl.setTitleTextAttributes(largerRedTextSelectAttributes, for: .selected)
         
         self.reloadPage()
         self.showDebugInfo()
     }
-    
+
     
     func computeStickyHeaderContainerViewFrame() -> CGRect {
         return CGRect(x: 0, y: 0, width: mainScrollView.bounds.width, height: stickyheaderContainerViewHeight)
@@ -354,15 +315,10 @@ extension BaseProfileViewController {
         return CGRect(x: 0, y: upperViewFrame.origin.y + upperViewFrame.height , width: mainScrollView.bounds.width, height: tableView.contentSize.height)
     }
     
-    func computeMainScrollViewIndicatorInsets() -> UIEdgeInsets {
-        return UIEdgeInsetsMake(self.computeSegmentedControlContainerFrame().alp_originBottom, 0, 0, 0)
-    }
-    
     func computeNavigationFrame() -> CGRect {
-        //        return headerCoverView.convert(headerCoverView.bounds, to: self.view)
-        let navigationHeight:CGFloat = max(stickyHeaderContainerView.frame.origin.y - self.mainScrollView.contentOffset.y + stickyHeaderContainerView.bounds.height, navigationMinHeight)
-        
-        let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderContainerView.bounds.width, height: navigationHeight)
+        let navigationHeight:CGFloat = max(stickyHeaderView.frame.origin.y - self.mainScrollView.contentOffset.y + stickyHeaderView.bounds.height, navigationMinHeight)
+
+        let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderView.bounds.width, height: navigationHeight)
         return navigationLocation
     }
     
@@ -372,6 +328,7 @@ extension BaseProfileViewController {
         return CGRect(x: 0, y: profileHeaderView.frame.maxY, width: mainScrollView.bounds.width, height: segmentedControlContainerHeight)
         
     }
+    
 }
 
 extension BaseProfileViewController: UIScrollViewDelegate {
@@ -389,34 +346,28 @@ extension BaseProfileViewController: UIScrollViewDelegate {
         if contentOffset.y <= 0 {
             let bounceProgress = min(1, abs(contentOffset.y) / bouncingThreshold)
             
-            let newHeight = abs(contentOffset.y) + self.stickyheaderContainerViewHeight
+            let newHeight = abs(contentOffset.y) + stickyheaderContainerViewHeight
             
             // 调整 stickyHeader 的 frame
-            self.stickyHeaderContainerView.frame = CGRect(
+            self.stickyHeaderView.frame = CGRect(
                 x: 0,
                 y: contentOffset.y,
                 width: mainScrollView.bounds.width,
                 height: newHeight)
             
             // 更新blurEffectView的透明度
-            self.blurEffectView.alpha = min(1, bounceProgress * 2)
+            self.stickyHeaderView.blurEffectView.alpha = min(1, bounceProgress * 2)
             
             // 更新headerCoverView的缩放比例
             let scalingFactor = 1 + min(log(bounceProgress + 1), 2)
             //      print(scalingFactor)
-            self.headerCoverView.transform = CGAffineTransform(scaleX: scalingFactor, y: scalingFactor)
-            
-            // 调整 mainScrollView indicator insets
-            var baseInset = computeMainScrollViewIndicatorInsets()
-            baseInset.top += abs(contentOffset.y)
-            self.mainScrollView.scrollIndicatorInsets = baseInset
+            self.stickyHeaderView.headerCoverView.transform = CGAffineTransform(scaleX: scalingFactor, y: scalingFactor)
             
         } else {
             
-            self.blurEffectView.alpha = 0
-            self.mainScrollView.scrollIndicatorInsets = computeMainScrollViewIndicatorInsets()
+            self.stickyHeaderView.blurEffectView.alpha = 0
         }
-        
+
         // 普通情况时，适用于contentOffset.y改变时的更新
         let scaleProgress = max(0, min(1, contentOffset.y / self.scrollToScaleDownProfileIconDistance()))
         self.profileHeaderView.animator(t: scaleProgress)
@@ -425,19 +376,19 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
             // 当scrollView滚动到达阈值时scrollToScaleDownProfileIconDistance
             if contentOffset.y >= scrollToScaleDownProfileIconDistance() {
-                self.stickyHeaderContainerView.frame = CGRect(x: 0, y: contentOffset.y - scrollToScaleDownProfileIconDistance(), width: mainScrollView.bounds.width, height: stickyheaderContainerViewHeight)
+                self.stickyHeaderView.frame = CGRect(x: 0, y: contentOffset.y - scrollToScaleDownProfileIconDistance(), width: mainScrollView.bounds.width, height: stickyheaderContainerViewHeight)
                 // 当scrollView 的 segment顶部 滚动到scrollToScaleDownProfileIconDistance时(也就是导航底部及以上位置)，让stickyHeaderContainerView显示在最上面，防止被profileHeaderView遮挡
-                tableHeaderView.bringSubview(toFront: self.stickyHeaderContainerView)
+                tableHeaderView.bringSubview(toFront: self.stickyHeaderView)
                 
             } else {
                 // 当scrollView 的 segment顶部 滚动到导航底部以下位置，让profileHeaderView显示在最上面,防止用户头像被遮挡
-                self.stickyHeaderContainerView.frame = computeStickyHeaderContainerViewFrame()
+                self.stickyHeaderView.frame = computeStickyHeaderContainerViewFrame()
                 tableHeaderView.bringSubview(toFront: self.profileHeaderView)
             }
             
             // Sticky Segmented Control
             let navigationLocation = computeNavigationFrame()
-            //            let navigationHeight:CGFloat = navigationLocation.height - abs(navigationLocation.origin.y)
+//            let navigationHeight:CGFloat = navigationLocation.height - abs(navigationLocation.origin.y)
             
             let segmentedControlContainerLocationY = ceil(stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationLocation.height)
             let contentOffSetY = ceil(contentOffset.y)
@@ -460,7 +411,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
             let totalHeight = titleLabel.bounds.height + nicknameLabel.bounds.height + 35
             let detailProgress = max(0, min((contentOffset.y - titleLabelLocationY) / totalHeight, 1))
-            blurEffectView.alpha = detailProgress
+            self.stickyHeaderView.blurEffectView.alpha = detailProgress
             animateNaivationTitleAt(progress: detailProgress)
             
         }
@@ -476,7 +427,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             self.scrollViewDidEndScroll(scrollView)
         }
     }
-    
+   
 }
 
 extension BaseProfileViewController: HitTestScrollViewGestureRecognizerDelegate {
@@ -643,7 +594,7 @@ extension BaseProfileViewController {
 extension BaseProfileViewController {
     
     var debugMode: Bool {
-        return false
+        return true
     }
     
     func showDebugInfo() {
@@ -655,8 +606,8 @@ extension BaseProfileViewController {
             
             self.view.addSubview(debugTextView)
             debugTextView.translatesAutoresizingMaskIntoConstraints = false
-            debugTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16.0).isActive = true
-            debugTextView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 16.0).isActive = true
+            debugTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 6.0).isActive = true
+            debugTextView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: UIApplication.shared.statusBarFrame.height).isActive = true
         }
     }
     

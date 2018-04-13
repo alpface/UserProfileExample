@@ -36,7 +36,7 @@ class HitTestContainerViewCollectionViewCell: UICollectionViewCell {
     
     /// container scrollView 自带滑动手势状态发送改变时调用
     @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) -> Void
-    
+
     /// child scrollView 滚动时调用
     @objc optional func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewDidScroll scrollView: UIScrollView) -> Void
     
@@ -108,10 +108,10 @@ class HitTestContainerViewController: UIViewController {
         view.addObserver(self, forKeyPath: "panGestureRecognizer.state", options: .new, context: nil)
         return view
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
         setupUI()
     }
@@ -152,7 +152,7 @@ class HitTestContainerViewController: UIViewController {
         self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -179,7 +179,7 @@ class HitTestContainerViewController: UIViewController {
     deinit {
         self.collectionView.removeObserver(self, forKeyPath: "panGestureRecognizer.state")
     }
-    
+
 }
 
 extension HitTestContainerViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -222,9 +222,9 @@ extension HitTestContainerViewController: UICollectionViewDataSource, UICollecti
             // 如果完全显示的控制器和已经离开屏幕的控制器是同一个就return，防止初始化完成后是同一个
             endDisplayingViewController.endAppearanceTransition()
         }
-        //        UIView.animate(withDuration: 0.3) {
-        //            UIApplication.shared.setNeedsStatusBarAppearanceUpdate()
-        //        }
+//        UIView.animate(withDuration: 0.3) {
+//            UIApplication.shared.setNeedsStatusBarAppearanceUpdate()
+//        }
     }
     
     /// cell 即将显示在屏幕时调用

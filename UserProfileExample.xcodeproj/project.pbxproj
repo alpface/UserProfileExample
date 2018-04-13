@@ -18,6 +18,7 @@
 		D2AF367D2075CFCA00D5FFAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AF367C2075CFCA00D5FFAF /* AppDelegate.swift */; };
 		D2AF36842075CFCC00D5FFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36832075CFCC00D5FFAF /* Assets.xcassets */; };
 		D2AF36872075CFCC00D5FFAF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2AF36852075CFCC00D5FFAF /* LaunchScreen.storyboard */; };
+		D2D663282080FF830044E2A7 /* StickyHeaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D663272080FF830044E2A7 /* StickyHeaderContainerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		D2AF36832075CFCC00D5FFAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2AF36862075CFCC00D5FFAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D2AF36882075CFCC00D5FFAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2D663272080FF830044E2A7 /* StickyHeaderContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickyHeaderContainerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +52,7 @@
 		D289534B2076A22B0029CE92 /* UserProfile */ = {
 			isa = PBXGroup;
 			children = (
+				D2D663272080FF830044E2A7 /* StickyHeaderContainerView.swift */,
 				D289534C2076A22B0029CE92 /* ProfileHeaderView.swift */,
 				D289534D2076A22B0029CE92 /* ScrollableSegmentedControl.swift */,
 				D289534E2076A22B0029CE92 /* HitTestContainerViewController.swift */,
@@ -170,6 +173,7 @@
 			files = (
 				D28953582076A22C0029CE92 /* HitTestScrollViewCell.swift in Sources */,
 				D289535B2076A22C0029CE92 /* UserProfileViewController.swift in Sources */,
+				D2D663282080FF830044E2A7 /* StickyHeaderContainerView.swift in Sources */,
 				D28953562076A22C0029CE92 /* ScrollableSegmentedControl.swift in Sources */,
 				D289535A2076A22C0029CE92 /* HitTestScrollView.swift in Sources */,
 				D2AF367D2075CFCA00D5FFAF /* AppDelegate.swift in Sources */,
