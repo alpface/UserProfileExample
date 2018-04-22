@@ -75,7 +75,7 @@ open class BaseProfileViewController: UIViewController {
     /// main scrollView是否可以滚动 (用于控制main 与 child scrollView 之间的滚动)
     public var shouldScrollForMainScrollView: Bool = true
     
-    fileprivate lazy var mainScrollView: UITableView = {
+    open lazy var mainScrollView: UITableView = {
         let _mainScrollView = HitTestScrollView(frame: self.view.bounds, style: .plain)
         _mainScrollView.delegate = self
         _mainScrollView.dataSource = self
@@ -197,12 +197,12 @@ open class BaseProfileViewController: UIViewController {
     }
     
     open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        super.viewWillAppear(animated)
         self.containerViewController.beginAppearanceTransition(true, animated: true)
     }
     
     open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+        super.viewDidAppear(animated)
         self.containerViewController.endAppearanceTransition()
     }
     
@@ -242,11 +242,19 @@ open class BaseProfileViewController: UIViewController {
         /* 需要子类重写 */
         return (UIViewController() as? ProfileViewChildControllerProtocol)!
     }
+    
+    open func controller(didDisplay controller: UIViewController, forItemAt index: Int) {
+        /* 子类可以重写 */
+    }
+    
+    open func controller(willDisplay controller: UIViewController, forItemAt index: Int) {
+        /* 子类可以重写 */
+    }
 }
 
 extension BaseProfileViewController {
     
-    func prepareViews() {
+    fileprivate func prepareViews() {
         
         self.view.addSubview(mainScrollView)
         
@@ -284,7 +292,7 @@ extension BaseProfileViewController {
         segmentedControl.underlineSelected = true
         segmentedControl.selectedSegmentIndex = 0
         let largerWhiteTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
-                                       NSAttributedStringKey.foregroundColor: UIColor.white]
+                                         NSAttributedStringKey.foregroundColor: UIColor.white]
         
         let largerRedTextHighlightAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16),
                                                 NSAttributedStringKey.foregroundColor: UIColor.blue]
@@ -293,36 +301,36 @@ extension BaseProfileViewController {
         
         segmentedControl.setTitleTextAttributes(largerWhiteTextAttributes, for: .normal)
         
-    segmentedControl.setTitleTextAttributes(largerRedTextHighlightAttributes, for: .highlighted)
+        segmentedControl.setTitleTextAttributes(largerRedTextHighlightAttributes, for: .highlighted)
         
         segmentedControl.setTitleTextAttributes(largerRedTextSelectAttributes, for: .selected)
         
         self.reloadPage()
         self.showDebugInfo()
     }
-
     
-    func computeStickyHeaderContainerViewFrame() -> CGRect {
+    
+    fileprivate func computeStickyHeaderContainerViewFrame() -> CGRect {
         return CGRect(x: 0, y: 0, width: mainScrollView.bounds.width, height: stickyheaderContainerViewHeight)
     }
     
-    func computeProfileHeaderViewFrame() -> CGRect {
+    fileprivate func computeProfileHeaderViewFrame() -> CGRect {
         return CGRect(x: 0, y: computeStickyHeaderContainerViewFrame().origin.y + stickyheaderContainerViewHeight, width: mainScrollView.bounds.width, height: profileHeaderViewHeight)
     }
     
-    func computeTableViewFrame(tableView: UIScrollView) -> CGRect {
+    fileprivate func computeTableViewFrame(tableView: UIScrollView) -> CGRect {
         let upperViewFrame = computeSegmentedControlContainerFrame()
         return CGRect(x: 0, y: upperViewFrame.origin.y + upperViewFrame.height , width: mainScrollView.bounds.width, height: tableView.contentSize.height)
     }
     
-    func computeNavigationFrame() -> CGRect {
+    fileprivate func computeNavigationFrame() -> CGRect {
         let navigationHeight:CGFloat = max(stickyHeaderView.frame.origin.y - self.mainScrollView.contentOffset.y + stickyHeaderView.bounds.height, navigationMinHeight)
-
+        
         let navigationLocation = CGRect(x: 0, y: 0, width: stickyHeaderView.bounds.width, height: navigationHeight)
         return navigationLocation
     }
     
-    func computeSegmentedControlContainerFrame() -> CGRect {
+    fileprivate func computeSegmentedControlContainerFrame() -> CGRect {
         //        let rect = computeProfileHeaderViewFrame()
         //        return CGRect(x: 0, y: rect.origin.y + rect.height, width: mainScrollView.bounds.width, height: segmentedControlContainerHeight)
         return CGRect(x: 0, y: profileHeaderView.frame.maxY, width: mainScrollView.bounds.width, height: segmentedControlContainerHeight)
@@ -367,7 +375,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
             self.stickyHeaderView.blurEffectView.alpha = 0
         }
-
+        
         // 普通情况时，适用于contentOffset.y改变时的更新
         let scaleProgress = max(0, min(1, contentOffset.y / self.scrollToScaleDownProfileIconDistance()))
         self.profileHeaderView.animator(t: scaleProgress)
@@ -388,7 +396,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             
             // Sticky Segmented Control
             let navigationLocation = computeNavigationFrame()
-//            let navigationHeight:CGFloat = navigationLocation.height - abs(navigationLocation.origin.y)
+            //            let navigationHeight:CGFloat = navigationLocation.height - abs(navigationLocation.origin.y)
             
             let segmentedControlContainerLocationY = ceil(stickyheaderContainerViewHeight + profileHeaderViewHeight - navigationLocation.height)
             let contentOffSetY = ceil(contentOffset.y)
@@ -427,7 +435,7 @@ extension BaseProfileViewController: UIScrollViewDelegate {
             self.scrollViewDidEndScroll(scrollView)
         }
     }
-   
+    
 }
 
 extension BaseProfileViewController: HitTestScrollViewGestureRecognizerDelegate {
@@ -435,6 +443,7 @@ extension BaseProfileViewController: HitTestScrollViewGestureRecognizerDelegate 
         if gestureRecognizer == self.mainScrollView.panGestureRecognizer && otherGestureRecognizer == self.containerViewController.collectionView.panGestureRecognizer {
             return false
         }
+    
         return true
     }
 }
@@ -494,15 +503,16 @@ extension BaseProfileViewController {
 }
 extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
     
-    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) {
+    internal func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, didPageDisplay controller: UIViewController, forItemAt index: Int) {
         segmentedControl.selectedSegmentIndex = index
+        self.controller(didDisplay: controller, forItemAt: index)
     }
     
-    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, willPageDisplay controller: UIViewController, forItemAt index: Int) {
-        
+    internal func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, willPageDisplay controller: UIViewController, forItemAt index: Int) {
+        self.controller(willDisplay: controller, forItemAt: index)
     }
     
-    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) {
+    internal func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, handlerContainerPanGestureState panGesture: UIPanGestureRecognizer) {
         // 当滚动page 的容器视图时，mainScrollView不可以滚动
         switch panGesture.state {
         case .began:
@@ -512,7 +522,7 @@ extension BaseProfileViewController: HitTestContainerViewControllerDelegate {
         }
     }
     
-    func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewLeaveTop scrollView: UIScrollView) {
+    internal func hitTestContainerViewController(_ containerViewController: HitTestContainerViewController, childScrollViewLeaveTop scrollView: UIScrollView) {
         
         // 当子scrollview 离开顶部时，其不应该可能滚动，main scrollView 可以滚动
         self.shouldScrollForMainScrollView = true
@@ -557,7 +567,7 @@ extension BaseProfileViewController: UITableViewDelegate, UITableViewDataSource 
 // MARK: Animators
 extension BaseProfileViewController {
     /// 更新导航条上面titleLabel的位置
-    func animateNaivationTitleAt(progress: CGFloat) {
+    fileprivate func animateNaivationTitleAt(progress: CGFloat) {
         
         let totalDistance: CGFloat = self.navigationTitleLabel.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height + ALPNavigationTitleLabelBottomPadding
         
@@ -581,23 +591,22 @@ extension BaseProfileViewController {
 
 
 extension BaseProfileViewController {
-    func updateTableViewContent(index: Int) {
-        print("currentIndex did changed \(self.currentIndex)")
+    fileprivate func updateTableViewContent(index: Int) {
         self.containerViewController.show(page: index, animated: true)
     }
     
-    @objc internal func segmentedControlValueDidChange(sender: AnyObject?) {
+    @objc fileprivate func segmentedControlValueDidChange(sender: AnyObject?) {
         self.currentIndex = self.segmentedControl.selectedSegmentIndex
     }
 }
 
 extension BaseProfileViewController {
     
-    var debugMode: Bool {
-        return true
+    public var debugMode: Bool {
+        return false
     }
     
-    func showDebugInfo() {
+    fileprivate func showDebugInfo() {
         if debugMode {
             self.debugTextView = UILabel()
             debugTextView.text = "debug mode: on"
@@ -616,8 +625,3 @@ extension BaseProfileViewController {
     }
 }
 
-extension CGRect {
-    var alp_originBottom: CGFloat {
-        return self.origin.y + self.height
-    }
-}
